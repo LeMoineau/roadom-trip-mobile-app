@@ -38,6 +38,12 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Autoriser $(PRODUCT_NAME) a accéder à votre localisation."
+        }
       ]
     ],
     "experiments": {
