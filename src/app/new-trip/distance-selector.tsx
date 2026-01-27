@@ -20,9 +20,10 @@ export default function DistanceSelector() {
     type: DISTANCE_TYPE;
     defaultValue?: string;
   }>();
+  console.log("defaultV", defaultValue);
   const updateDistance = useNewTripConfigStore((state) => state.updateDistance);
   const [distance, setDistance] = useState(
-    `${defaultValue ?? DEFAULT_DISTANCE}`,
+    `${defaultValue && defaultValue.length > 0 ? defaultValue : DEFAULT_DISTANCE}`,
   );
 
   const changeDistance = (direction: "remove" | "add", val: number = 50) => {
@@ -78,12 +79,13 @@ export default function DistanceSelector() {
             value={distance}
             onChangeText={(text) => {
               try {
-                setDistance(`${parseInt(text)}`);
+                const newDistance = parseInt(text);
+                setDistance(`${isNaN(newDistance) ? "" : newDistance}`);
               } catch (err) {
                 console.error(`distance input ${text} is not a number`);
               }
             }}
-            placeholder="50"
+            placeholder={defaultValue}
           ></TextInput>
           <Text style={{ fontSize: 20 }}>km</Text>
         </View>
@@ -102,7 +104,8 @@ export default function DistanceSelector() {
           ></ExpoIcon>
         }
         onPress={() => {
-          updateDistance(parseInt(distance), type);
+          const newDistance = parseInt(distance);
+          if (!isNaN(newDistance)) updateDistance(newDistance, type);
           router.dismissTo({
             pathname: "/new-trip",
           });

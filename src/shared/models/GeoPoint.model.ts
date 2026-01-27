@@ -1,4 +1,4 @@
-import { GeoPointDto } from "../types/geo/GeoPoint.dto";
+import { GeoPointDto } from "../types/dto/geo/GeoPoint.dto";
 
 export class GeoPoint {
   lat: number;

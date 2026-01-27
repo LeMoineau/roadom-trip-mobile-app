@@ -1,4 +1,4 @@
-import { GeoPoint } from "../models/GeoPoint";
+import { GeoPoint } from "../models/GeoPoint.model";
 import { MathUtils } from "./math.utils";
 import * as geolib from "geolib";
 

@@ -1,9 +1,12 @@
 import { router } from "expo-router";
+import { useContext } from "react";
 import { View } from "react-native";
 import OutlineButton from "../../components/common/buttons/OutlineButton";
 import ExpoIcon from "../../components/common/icons/ExpoIcon";
 import GeneratingTripButton from "../../components/features/new-trip/GeneratingTripButton";
 import { colors } from "../../constants/style/colors";
+import { ToastContext } from "../../contexts/contexts";
+import useStoredTrip from "../../hooks/features/trip/useStoredTrip";
 import useTripApi from "../../hooks/features/trip/useTripApi";
 import { useNewTripConfigStore } from "../../stores/features/new-trip-config.store";
 
@@ -20,8 +23,10 @@ export default function NewTripPage() {
   const userLocation = useNewTripConfigStore((state) => state.userLocation);
   const distanceMax = useNewTripConfigStore((state) => state.distanceMax);
   const distanceMin = useNewTripConfigStore((state) => state.distanceMin);
+  const { showToast } = useContext(ToastContext);
 
   const { createTrip } = useTripApi();
+  const { saveCurrentTrip } = useStoredTrip();
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 20, gap: 20 }}>
@@ -101,15 +106,33 @@ export default function NewTripPage() {
         onPress={async () => {
           if (!startingLat || !startingLon || !distanceMax) return;
           await createTrip({
-            startPos: {
+            startingPos: {
               lat: startingLat,
               lon: startingLon,
             },
             distanceMax,
             distanceMin,
-          }).then((res) => {
-            console.log(res);
-          });
+          })
+            .then(async (trip) => {
+              await saveCurrentTrip(trip);
+              router.dismissTo({
+                pathname: "..",
+                params: { newTripCreated: trip.id },
+              });
+              showToast({
+                message: "Nouveau road-trip généré !",
+                bgColor: colors.green[500],
+                duration: 3000,
+              });
+            })
+            .catch((err: Error) => {
+              showToast({
+                message: err.message,
+                bgColor: colors.red[400],
+                textColor: colors.white,
+                duration: 3000,
+              });
+            });
         }}
       ></GeneratingTripButton>
     </View>

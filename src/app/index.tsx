@@ -1,12 +1,25 @@
-import { AntDesign } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect } from "react";
 import { Text, View } from "react-native";
 import FloatingButton from "../components/common/buttons/FloatingButton";
 import OutlineButton from "../components/common/buttons/OutlineButton";
 import ExpoIcon from "../components/common/icons/ExpoIcon";
+import NoTripYetItem from "../components/common/items/NoTripYetItem";
+import HomeTripItem from "../components/features/index/HomeTripItem";
 import { colors } from "../constants/style/colors";
+import useStoredTrip from "../hooks/features/trip/useStoredTrip";
 
 export default function Index() {
+  const { newTripCreated } = useLocalSearchParams<{
+    newTripCreated?: string;
+  }>();
+  const { trip, loadCurrentTrip } = useStoredTrip();
+
+  useEffect(() => {
+    console.log(newTripCreated);
+    loadCurrentTrip();
+  }, [newTripCreated]);
+
   return (
     <View
       style={{
@@ -18,27 +31,11 @@ export default function Index() {
       }}
     >
       <Text style={{ fontSize: 25, fontWeight: 500 }}>Vos Voyages</Text>
-      <View
-        style={{
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          backgroundColor: colors.gray[50],
-          borderWidth: 1,
-          borderColor: colors.gray[100],
-          borderRadius: 20,
-          gap: 5,
-          marginTop: 20,
-          marginVertical: 20,
-          paddingVertical: 20,
-        }}
-      >
-        <AntDesign name="car" size={50} color={colors.gray[500]}></AntDesign>
-        <Text style={{ color: colors.gray[500] }}>
-          Pas de voyages en cours...
-        </Text>
-      </View>
+      {trip ? (
+        <HomeTripItem trip={trip}></HomeTripItem>
+      ) : (
+        <NoTripYetItem></NoTripYetItem>
+      )}
       <OutlineButton
         content="Historiques des voyages"
         appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
