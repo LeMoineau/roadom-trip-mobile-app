@@ -6,10 +6,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import OutlineButton from "../../components/common/buttons/OutlineButton";
 import ExpoIcon from "../../components/common/icons/ExpoIcon";
 import { colors } from "../../constants/style/colors";
+import { useNewTripConfigStore } from "../../stores/features/new-trip-config.store";
 
 export default function LocationSelectorPage() {
   const inputRef = useRef<TextInput>(null);
   const [userLocationLoading, setUserLocationLoading] = useState(false);
+  const updateStartingPos = useNewTripConfigStore(
+    (state) => state.updateStartingPos,
+  );
 
   const getLocation = async (): Promise<Location.LocationObject> => {
     try {
@@ -66,13 +70,13 @@ export default function LocationSelectorPage() {
           getLocation()
             .then((res) => {
               console.log("user location: ", res);
+              updateStartingPos(
+                res.coords.latitude,
+                res.coords.longitude,
+                true,
+              );
               router.dismissTo({
                 pathname: "/new-trip",
-                params: {
-                  startLat: res.coords.latitude,
-                  startLon: res.coords.longitude,
-                  userLocation: "true",
-                },
               });
             })
             .catch((err) => {

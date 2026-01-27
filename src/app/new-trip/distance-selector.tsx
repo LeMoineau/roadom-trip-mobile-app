@@ -1,8 +1,4 @@
-import {
-  router,
-  useGlobalSearchParams,
-  useLocalSearchParams,
-} from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,13 +6,24 @@ import FloatingButton from "../../components/common/buttons/FloatingButton";
 import IconButton from "../../components/common/buttons/IconButton";
 import ExpoIcon from "../../components/common/icons/ExpoIcon";
 import { colors } from "../../constants/style/colors";
+import { useNewTripConfigStore } from "../../stores/features/new-trip-config.store";
 
 const DEFAULT_DISTANCE = 50;
+type DISTANCE_TYPE = "max" | "min";
+const TITLE_BY_DISTANCE_TYPE = (type: DISTANCE_TYPE) =>
+  type === "max"
+    ? "Combien de km êtes-vous prêt à parcourir pour cette aventure ?"
+    : "Combien de km voulez-vous au moins parcourir ?";
 
 export default function DistanceSelector() {
-  const [distance, setDistance] = useState(`${DEFAULT_DISTANCE}`);
-  const params = useLocalSearchParams();
-  const glob = useGlobalSearchParams();
+  const { type, defaultValue } = useLocalSearchParams<{
+    type: DISTANCE_TYPE;
+    defaultValue?: string;
+  }>();
+  const updateDistance = useNewTripConfigStore((state) => state.updateDistance);
+  const [distance, setDistance] = useState(
+    `${defaultValue ?? DEFAULT_DISTANCE}`,
+  );
 
   const changeDistance = (direction: "remove" | "add", val: number = 50) => {
     let currentDistance = parseInt(distance);
@@ -33,9 +40,7 @@ export default function DistanceSelector() {
     <SafeAreaView
       style={{ flex: 1, paddingHorizontal: 20, paddingTop: 20, gap: 20 }}
     >
-      <Text style={{ fontSize: 25 }}>
-        Combien de km êtes-vous prêt à parcourir pour cette aventure ?
-      </Text>
+      <Text style={{ fontSize: 25 }}> {TITLE_BY_DISTANCE_TYPE(type)} </Text>
       <View
         style={{
           display: "flex",
@@ -53,7 +58,10 @@ export default function DistanceSelector() {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
+            justifyContent: "center",
             gap: 10,
+            paddingHorizontal: 20,
+            flex: 1,
           }}
         >
           <TextInput
@@ -64,6 +72,8 @@ export default function DistanceSelector() {
               padding: 20,
               borderRadius: 20,
               fontSize: 20,
+              maxWidth: "70%",
+              textAlign: "center",
             }}
             value={distance}
             onChangeText={(text) => {
@@ -92,16 +102,9 @@ export default function DistanceSelector() {
           ></ExpoIcon>
         }
         onPress={() => {
-          console.log(params, glob);
-          router.back();
-          router.setParams({
-            distanceTrip: parseInt(distance),
-          });
+          updateDistance(parseInt(distance), type);
           router.dismissTo({
             pathname: "/new-trip",
-            params: {
-              distanceTrip: parseInt(distance),
-            },
           });
         }}
       ></FloatingButton>

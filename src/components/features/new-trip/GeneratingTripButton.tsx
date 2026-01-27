@@ -4,6 +4,12 @@ import { colors } from "../../../constants/style/colors";
 import FloatingButton from "../../common/buttons/FloatingButton";
 import ExpoIcon from "../../common/icons/ExpoIcon";
 
+/**
+ * Generating Trip button
+ *
+ * Trigger {onPress} only if button is activated
+ * @returns
+ */
 export default function GeneratingTripButton({
   activated,
   onPress,

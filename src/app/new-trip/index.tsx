@@ -1,31 +1,27 @@
-import {
-  router,
-  useGlobalSearchParams,
-  useLocalSearchParams,
-} from "expo-router";
-import { useEffect } from "react";
+import { router } from "expo-router";
 import { View } from "react-native";
 import OutlineButton from "../../components/common/buttons/OutlineButton";
 import ExpoIcon from "../../components/common/icons/ExpoIcon";
 import GeneratingTripButton from "../../components/features/new-trip/GeneratingTripButton";
 import { colors } from "../../constants/style/colors";
 import useTripApi from "../../hooks/features/trip/useTripApi";
+import { useNewTripConfigStore } from "../../stores/features/new-trip-config.store";
 
 export default function NewTripPage() {
-  const glob = useGlobalSearchParams();
-  const { startLat, startLon, userLocation, distanceTrip } =
-    useLocalSearchParams<{
-      startLat?: string;
-      startLon?: string;
-      userLocation?: string;
-      distanceTrip?: string;
-    }>();
-  const { createTrip } = useTripApi();
+  // const { startingLat, startingLon, userLocation, distanceTrip } =
+  //   useLocalSearchParams<{
+  //     startingLat?: string;
+  //     startLon?: string;
+  //     userLocation?: string;
+  //     distanceTrip?: string;
+  //   }>();
+  const startingLat = useNewTripConfigStore((state) => state.startingLat);
+  const startingLon = useNewTripConfigStore((state) => state.startingLon);
+  const userLocation = useNewTripConfigStore((state) => state.userLocation);
+  const distanceMax = useNewTripConfigStore((state) => state.distanceMax);
+  const distanceMin = useNewTripConfigStore((state) => state.distanceMin);
 
-  useEffect(() => {
-    console.log(startLat, startLon, userLocation, distanceTrip);
-    console.log(glob);
-  }, [startLat, startLon, userLocation, distanceTrip]);
+  const { createTrip } = useTripApi();
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 20, gap: 20 }}>
@@ -36,46 +32,84 @@ export default function NewTripPage() {
             name="circle-o"
             size={20}
             style={{
-              color: startLat && startLon ? colors.black : colors.gray[500],
+              color:
+                startingLat && startingLon ? colors.black : colors.gray[500],
             }}
           ></ExpoIcon>
         }
         appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
         textStyle={{
-          color: startLat && startLon ? colors.black : colors.gray[500],
+          color: startingLat && startingLon ? colors.black : colors.gray[500],
         }}
         onPress={() => {
           router.push("/new-trip/location-selector");
         }}
       ></OutlineButton>
       <OutlineButton
-        content={distanceTrip ? `${distanceTrip} km` : "Taille du voyage"}
+        content={distanceMax ? `${distanceMax} km` : "Distance max"}
         prependIcon={
           <ExpoIcon
-            name="arrows-h"
+            name="add-road"
             size={20}
             style={{
-              color: distanceTrip ? colors.black : colors.gray[500],
+              color: distanceMax ? colors.black : colors.gray[500],
             }}
           ></ExpoIcon>
         }
         appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
         textStyle={{
-          color: distanceTrip ? colors.black : colors.gray[500],
+          color: distanceMax ? colors.black : colors.gray[500],
         }}
         onPress={() => {
-          router.push("/new-trip/distance-selector");
+          router.push({
+            pathname: "/new-trip/distance-selector",
+            params: { type: "max", defaultValue: distanceMax },
+          });
+        }}
+      ></OutlineButton>
+      <OutlineButton
+        content={distanceMin ? `${distanceMin} km` : "Distance min"}
+        prependIcon={
+          <ExpoIcon
+            name="remove-road"
+            size={20}
+            style={{
+              color: distanceMin ? colors.black : colors.gray[500],
+            }}
+          ></ExpoIcon>
+        }
+        appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
+        textStyle={{
+          color: distanceMin ? colors.black : colors.gray[500],
+        }}
+        onPress={() => {
+          router.push({
+            pathname: "/new-trip/distance-selector",
+            params: { type: "min", defaultValue: distanceMin },
+          });
         }}
       ></OutlineButton>
       <GeneratingTripButton
-        activated={!!(startLat && startLon && distanceTrip)}
+        activated={
+          !!(
+            startingLat &&
+            startingLon &&
+            distanceMax &&
+            (!distanceMin || distanceMin < distanceMax)
+          )
+        }
         onPress={async () => {
-          if (startLat && startLon && distanceTrip) {
-            await createTrip({
-              startPos: [parseFloat(startLat), parseFloat(startLon)],
-              distanceTrip: parseInt(distanceTrip),
-            });
-          }
+          if (!startingLat || !startingLon || !distanceMax) return;
+          await createTrip({
+            startPos: {
+              lat: startingLat,
+              lon: startingLon,
+            },
+            distanceMax,
+            distanceMin,
+          }).then((res) => {
+            console.log(res);
+          });
         }}
       ></GeneratingTripButton>
     </View>

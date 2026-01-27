@@ -1,7 +1,7 @@
 import axios from "axios";
-import { CreatingTripRequest } from "../../../shared/types/CreatingTripRequest";
+import { CreatingTripRequest } from "../../../shared/types/trip/CreatingTripRequest";
 
-const TRIP_API_URL = __DEV__ ? "http://10.172.9.167:3001" : "";
+const TRIP_API_URL = __DEV__ ? "http://localhost:3001" : "";
 
 export default function useTripApi() {
   const createTrip = async (req: CreatingTripRequest) => {
