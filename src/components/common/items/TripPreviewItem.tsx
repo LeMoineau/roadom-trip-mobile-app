@@ -3,6 +3,7 @@ import { colors } from "../../../constants/style/colors";
 import { Trip } from "../../../shared/models/Trip.model";
 import TagItem from "../../common/items/TagItem";
 import ExpoIcon from "../icons/ExpoIcon";
+import Divider from "../misc/Divider";
 import MapTimeline from "../misc/MapTimeline";
 
 export default function TripPreviewItem({
@@ -58,14 +59,7 @@ export default function TripPreviewItem({
         ></TagItem>
       </View>
 
-      <View
-        style={{
-          borderTopWidth: 1,
-          borderTopColor: colors.gray[200],
-          marginTop: -5,
-          marginBottom: 5,
-        }}
-      ></View>
+      <Divider style={{ marginTop: -5, marginBottom: 5 }}></Divider>
 
       <MapTimeline
         dots={[
@@ -116,11 +110,7 @@ export default function TripPreviewItem({
           },
         ]}
       ></MapTimeline>
-
-      <View
-        style={{ borderTopWidth: 1, borderTopColor: colors.gray[200] }}
-      ></View>
-
+      <Divider></Divider>
       <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
         <ExpoIcon
           name="notifications-on"
