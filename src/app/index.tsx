@@ -5,7 +5,7 @@ import FloatingButton from "../components/common/buttons/FloatingButton";
 import OutlineButton from "../components/common/buttons/OutlineButton";
 import ExpoIcon from "../components/common/icons/ExpoIcon";
 import NoTripYetItem from "../components/common/items/NoTripYetItem";
-import HomeTripItem from "../components/features/index/HomeTripItem";
+import TripPreviewItem from "../components/common/items/TripPreviewItem";
 import { colors } from "../constants/style/colors";
 import useStoredTrip from "../hooks/features/trip/useStoredTrip";
 
@@ -28,11 +28,17 @@ export default function Index() {
         paddingTop: 20,
         justifyContent: "flex-start",
         alignItems: "flex-start",
+        gap: 20,
       }}
     >
       <Text style={{ fontSize: 25, fontWeight: 500 }}>Vos Voyages</Text>
       {trip ? (
-        <HomeTripItem trip={trip}></HomeTripItem>
+        <TripPreviewItem
+          trip={trip}
+          onPress={() => {
+            router.push({ pathname: "/trip/[id]", params: { id: trip.id } });
+          }}
+        ></TripPreviewItem>
       ) : (
         <NoTripYetItem></NoTripYetItem>
       )}
@@ -42,6 +48,7 @@ export default function Index() {
         onPress={() => {
           router.push("/trip-history");
         }}
+        style={{ width: "100%" }}
       ></OutlineButton>
       <FloatingButton
         content="Nouveau Voyage"

@@ -52,7 +52,10 @@ export default function RootLayout() {
             name="trip-history"
             options={{ headerTitle: "Historiques des voyages" }}
           />
-          <Stack.Screen name="trip/[id]" options={{ headerTitle: "Voyage" }} />
+          <Stack.Screen
+            name="trip/[id]"
+            options={{ headerTitle: "Voyage Actuel" }}
+          />
         </Stack>
       </ToastProvider>
     </SafeAreaView>

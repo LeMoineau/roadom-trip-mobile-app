@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import OutlineButton from "../../components/common/buttons/OutlineButton";
 import ExpoIcon from "../../components/common/icons/ExpoIcon";
 import { colors } from "../../constants/style/colors";
+import { GeoPoint } from "../../shared/models/GeoPoint.model";
 import { useNewTripConfigStore } from "../../stores/features/new-trip-config.store";
 
 export default function LocationSelectorPage() {
@@ -71,8 +72,11 @@ export default function LocationSelectorPage() {
             .then((res) => {
               console.log("user location: ", res);
               updateStartingPos(
-                res.coords.latitude,
-                res.coords.longitude,
+                new GeoPoint({
+                  lat: res.coords.latitude,
+                  lon: res.coords.longitude,
+                  label: "Votre position géolocalisée",
+                }).toDto(),
                 true,
               );
               router.dismissTo({

@@ -3,9 +3,9 @@ import { Trip } from "../../../shared/models/Trip.model";
 import { CreatingTripRequest } from "../../../shared/types/dto/trip/CreatingTripRequest";
 import { TripDto } from "../../../shared/types/dto/trip/Trip.dto";
 
-//
+//10.172.9.167
 //localhost
-const TRIP_API_URL = __DEV__ ? "http://10.172.9.167:3001" : "";
+const TRIP_API_URL = __DEV__ ? "http://localhost:3001" : "";
 
 export default function useTripApi() {
   const createTrip = async (req: CreatingTripRequest): Promise<Trip> => {

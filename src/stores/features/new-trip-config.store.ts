@@ -1,16 +1,15 @@
 import { create } from "zustand";
+import { GeoPointDto } from "../../shared/types/dto/geo/GeoPoint.dto";
 
 const DEFAULT_STATE: State = {
-  startingLat: undefined,
-  startingLon: undefined,
+  startingPos: undefined, // new GeoPoint({ lat: 48, lon: 5 }),
   userLocation: undefined,
   distanceMax: 600,
   distanceMin: undefined,
 };
 
 type State = {
-  startingLat?: number;
-  startingLon?: number;
+  startingPos?: GeoPointDto;
   userLocation?: boolean;
   distanceMax?: number;
   distanceMin?: number;
@@ -18,8 +17,7 @@ type State = {
 
 type Action = {
   updateStartingPos: (
-    startingLat: State["startingLat"],
-    startingLon: State["startingLon"],
+    startingPos: State["startingPos"],
     userLocation?: State["userLocation"],
   ) => void;
   updateDistance: (distance: number, type: "max" | "min") => void;
@@ -37,8 +35,8 @@ export const useNewTripConfigStore = create<State & Action>((set) => {
      * @param userLocation
      * @returns
      */
-    updateStartingPos: (startingLat, startingLon, userLocation) =>
-      set({ startingLat, startingLon, userLocation }),
+    updateStartingPos: (startingPos, userLocation) =>
+      set({ startingPos, userLocation }),
 
     /**
      * Update a distance depending of its type (max of min)
