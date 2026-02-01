@@ -30,18 +30,16 @@ export default function TripPreviewItem({
     >
       <View
         style={{
-          flex: 1,
           display: "flex",
           flexDirection: "row",
-          overflow: "hidden",
           alignItems: "center",
           gap: 10,
+          width: "100%",
         }}
       >
         <Text
           numberOfLines={1}
           style={{
-            maxWidth: "50%",
             overflow: "hidden",
             textOverflow: "clip",
             fontSize: 17,
@@ -111,13 +109,19 @@ export default function TripPreviewItem({
         ]}
       ></MapTimeline>
       <Divider></Divider>
-      <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: 10,
+        }}
+      >
         <ExpoIcon
           name="notifications-on"
           size={20}
           style={{ color: colors.gray[800] }}
         ></ExpoIcon>
-        <Text style={{ color: colors.gray[600] }}>
+        <Text style={{ flex: 1, width: "100%", color: colors.gray[600] }}>
           Notification de proximité à 400km du point d&apos;arrivée
         </Text>
       </View>

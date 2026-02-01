@@ -13,12 +13,24 @@ export default function useStoredTrip() {
   }, []);
 
   const saveCurrentTrip = async (trip: Trip) => {
+    if (currentTrip) {
+      const archivedTrip = (await getJson(
+        storageKeys.ARCHIVED_TRIPS,
+      )) as TripDto[];
+      if (!archivedTrip) {
+        await saveJson(storageKeys.ARCHIVED_TRIPS, [currentTrip]);
+      } else if (!archivedTrip.find((t) => t.id === currentTrip.id)) {
+        await saveJson(storageKeys.ARCHIVED_TRIPS, [
+          ...archivedTrip,
+          currentTrip,
+        ]);
+      }
+    }
     await saveJson(storageKeys.CURRENT_TRIP, trip.toDto());
   };
 
   const loadCurrentTrip = async () => {
     const tripDto = await getJson(storageKeys.CURRENT_TRIP);
-    console.log("tripdto loaded:", tripDto, isTripDto(tripDto));
     if (isTripDto(tripDto)) {
       setCurrentTrip(new Trip(tripDto as TripDto));
     }

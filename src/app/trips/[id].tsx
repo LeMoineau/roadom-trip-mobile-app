@@ -43,12 +43,23 @@ export default function TripPage() {
         >
           <Text>Date de début</Text>
           <TagItem
-            text="01/01/2001 à 11h00"
+            text={trip.createdAt.toLocaleString()}
             bgColor={colors.gray[100]}
             textColor={colors.gray[700]}
             iconName="clock-o"
           ></TagItem>
         </View>
+      </View>
+      <Divider style={{ marginTop: 5 }}></Divider>
+      <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+        <ExpoIcon
+          name="notifications-on"
+          size={20}
+          style={{ color: colors.gray[800] }}
+        ></ExpoIcon>
+        <Text style={{ color: colors.gray[600] }}>
+          Notification de proximité à 400km du point d&apos;arrivée
+        </Text>
       </View>
       <Divider style={{ marginBottom: 10 }}></Divider>
       <MapTimeline
@@ -78,26 +89,36 @@ export default function TripPage() {
                 style={{
                   padding: 10,
                   borderRadius: 10,
-                  backgroundColor: colors.gray[100],
+                  backgroundColor: colors.gray[50],
                   borderWidth: 1,
                   borderColor: colors.gray[200],
                   display: "flex",
                   flexDirection: "row",
-                  alignItems: "flex-start",
-                  gap: 7,
+                  alignItems: "center",
+                  gap: 10,
                   paddingRight: 15,
                   flex: 1,
                 }}
               >
-                <ExpoIcon
-                  name="check"
-                  size={15}
-                  style={{ color: colors.gray[800] }}
-                ></ExpoIcon>
-                <Text style={{ fontSize: 12, color: colors.gray[800] }}>
-                  Voici un long indice : ociqoizdoiqhz doiqhzdo hqizdh qoizdhiqo
-                  zhdqoizhd oqizhd
-                </Text>
+                <View
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "flex-start",
+                    gap: 10,
+                  }}
+                >
+                  <ExpoIcon
+                    name="check"
+                    size={15}
+                    style={{ color: colors.gray[800] }}
+                  ></ExpoIcon>
+                  <Text style={{ fontSize: 12, color: colors.gray[800] }}>
+                    Le blason de la commune
+                  </Text>
+                </View>
+                <ExpoIcon name="chevron-forward" size={20}></ExpoIcon>
               </View>
             ),
           },
@@ -131,16 +152,6 @@ export default function TripPage() {
         ]}
       ></MapTimeline>
       <Divider style={{ marginTop: 5 }}></Divider>
-      <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-        <ExpoIcon
-          name="notifications-on"
-          size={20}
-          style={{ color: colors.gray[800] }}
-        ></ExpoIcon>
-        <Text style={{ color: colors.gray[600] }}>
-          Notification de proximité à 400km du point d&apos;arrivée
-        </Text>
-      </View>
     </View>
   );
 }

@@ -36,7 +36,7 @@ export default function Index() {
         <TripPreviewItem
           trip={trip}
           onPress={() => {
-            router.push({ pathname: "/trip/[id]", params: { id: trip.id } });
+            router.push({ pathname: "/trips/[id]", params: { id: trip.id } });
           }}
         ></TripPreviewItem>
       ) : (
@@ -46,7 +46,7 @@ export default function Index() {
         content="Historiques des voyages"
         appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
         onPress={() => {
-          router.push("/trip-history");
+          router.push("/history");
         }}
         style={{ width: "100%" }}
       ></OutlineButton>

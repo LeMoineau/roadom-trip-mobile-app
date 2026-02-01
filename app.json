@@ -44,7 +44,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Autoriser $(PRODUCT_NAME) a accéder à votre localisation."
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true,

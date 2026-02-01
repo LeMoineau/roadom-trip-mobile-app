@@ -52,7 +52,10 @@ export default function NewTripPage() {
   return (
     <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 20, gap: 20 }}>
       <OutlineButton
-        content={userLocation ? "Votre position actuelle" : "Départ"}
+        content={
+          startingPos?.label ??
+          (userLocation ? "Votre position actuelle" : "Départ")
+        }
         prependIcon={
           <ExpoIcon
             name="circle-o"
@@ -67,7 +70,12 @@ export default function NewTripPage() {
           color: startingPos ? colors.black : colors.gray[500],
         }}
         onPress={() => {
-          router.push("/new-trip/location-selector");
+          router.push({
+            pathname: "/new-trip/location-selector",
+            params: startingPos
+              ? { currentPos: `[${startingPos.lat}, ${startingPos.lon}]` }
+              : {},
+          });
         }}
       ></OutlineButton>
       <OutlineButton

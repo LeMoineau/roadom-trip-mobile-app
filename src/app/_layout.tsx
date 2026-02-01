@@ -20,7 +20,7 @@ export default function RootLayout() {
           <Stack.Screen
             name="index"
             options={{
-              headerTitle: "Roadom Trip",
+              headerTitle: "AléaCarta",
               headerRight: () => (
                 <Pressable
                   onPress={() => {
@@ -49,11 +49,15 @@ export default function RootLayout() {
             options={{ headerTitle: "Paramètres" }}
           />
           <Stack.Screen
-            name="trip-history"
+            name="history"
             options={{ headerTitle: "Historiques des voyages" }}
           />
           <Stack.Screen
-            name="trip/[id]"
+            name="trips/[id]"
+            options={{ headerTitle: "Voyage Actuel" }}
+          />
+          <Stack.Screen
+            name="hints/[id]"
             options={{ headerTitle: "Voyage Actuel" }}
           />
         </Stack>

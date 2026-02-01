@@ -147,7 +147,7 @@ export default function MapTimeline({
           return (
             <>
               <MapTimelineDot
-                key={index}
+                key={`dots-${index}`}
                 color={color}
                 gapBetweenItemsAndDesc={gapBetweenItemsAndDesc}
                 last={last}
@@ -155,6 +155,7 @@ export default function MapTimeline({
               ></MapTimelineDot>
               {!last && spaceBetweenEachDots > 0 && (
                 <MapTimelineSeparator
+                  key={`separator-${index}`}
                   height={spaceBetweenEachDots}
                   color={color}
                   gapBetweenItemsAndDesc={gapBetweenItemsAndDesc}
