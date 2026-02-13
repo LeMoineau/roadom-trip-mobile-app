@@ -26,6 +26,7 @@ export default function LocationSelectorPage() {
   const handleGettingUserLocation = () => {
     getLocation()
       .then((res) => {
+        // TODO: recuperer direction de user location res.coords.heading
         updateStartingPos(
           new GeoPoint({
             lat: res.coords.latitude,
