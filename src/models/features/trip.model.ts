@@ -26,15 +26,9 @@ export class Trip {
     return this.dto.createdAt;
   }
 
-  getNextStep(options?: {
-    includeProximityNotification?: boolean;
-  }): Step | undefined {
+  getNextStep(options?: {}): Step | undefined {
     for (let step of this.steps) {
-      if (
-        !!!step.reach &&
-        (step.type !== "proximity-notification" ||
-          (!!options && !!options.includeProximityNotification))
-      ) {
+      if (!!!step.reach) {
         return step;
       }
     }

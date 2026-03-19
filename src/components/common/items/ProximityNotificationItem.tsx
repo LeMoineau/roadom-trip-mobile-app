@@ -44,7 +44,7 @@ export default function ProximityNotificationItem({ trip }: { trip: Trip }) {
         }}
       >
         {notificationStatus === "on"
-          ? `Notification de proximité à ${range}km du point d&apos;arrivée`
+          ? `Notification de proximité à ${range}km de la destination`
           : "Pas encore de notification de proximité"}
       </Text>
     </View>

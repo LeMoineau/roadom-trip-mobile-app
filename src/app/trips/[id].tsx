@@ -88,7 +88,7 @@ export default function TripPage() {
                 ),
               },
               ...trip.steps
-                .filter((s) => s.type !== "proximity-notification" && !!s.reach)
+                .filter((s) => !!s.reach)
                 .map((s) => ({
                   desc: <StepItem step={s}></StepItem>,
                 })),
