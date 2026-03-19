@@ -1,5 +1,7 @@
-export type HintType = "";
+import { StepDto } from "./../Step.dto";
 
-export interface HintDto {
+export type HintType = String;
+
+export interface HintDto extends StepDto {
   type: HintType;
 }
