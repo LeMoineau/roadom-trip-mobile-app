@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { colors } from "../../../constants/style/colors";
-import { TripDto } from "../../../shared/types/dto/trip/Trip.dto";
-import ExpoIcon from "../icons/ExpoIcon";
+import { Trip } from "../../../models/features/trip.model";
+import ExpoIcon from "../../common/icons/ExpoIcon";
+import NoMoreStepItem from "../../common/items/NoMoreStepItem";
 
-export default function NextStepDelayItem({ trip }: { trip: TripDto }) {
+export default function NextStepDelayItem({ trip }: { trip: Trip }) {
   const [nextStepDelay, setNextStepDelay] = useState<number | undefined>(30);
   const nextStepStatus = !!!nextStepDelay
     ? "finish"
@@ -13,7 +14,7 @@ export default function NextStepDelayItem({ trip }: { trip: TripDto }) {
       : "waiting";
 
   useEffect(() => {
-    const nextStep = trip.steps.find((s) => !!!s.reach);
+    const nextStep = trip.getNextStep();
     if (!!!nextStep) {
       setNextStepDelay(undefined);
     } else {
@@ -30,6 +31,10 @@ export default function NextStepDelayItem({ trip }: { trip: TripDto }) {
       );
     }
   });
+
+  if (nextStepStatus === "waiting") {
+    return <NoMoreStepItem></NoMoreStepItem>;
+  }
 
   return (
     <View
@@ -48,7 +53,7 @@ export default function NextStepDelayItem({ trip }: { trip: TripDto }) {
       }}
     >
       <ExpoIcon
-        name={nextStepStatus === "available" ? "road" : "timelapse"}
+        name={nextStepStatus === "available" ? "road" : "clock-o"}
         size={20}
         style={{
           color:
@@ -63,7 +68,7 @@ export default function NextStepDelayItem({ trip }: { trip: TripDto }) {
         </Text>
       ) : (
         <Text style={{ color: colors.blue[800] }}>
-          Prochain indice dans {nextStepDelay}min
+          Prochaine étape dans {nextStepDelay}min
         </Text>
       )}
     </View>

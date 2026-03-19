@@ -8,7 +8,7 @@ import { colors } from "../../constants/style/colors";
 import { ToastContext } from "../../contexts/contexts";
 import useStoredTrip from "../../hooks/features/trip/useStoredTrip";
 import useTripApi from "../../hooks/features/trip/useTripApi";
-import { useNewTripConfigStore } from "../../stores/features/new-trip-config.store";
+import { useNewTripConfigStore } from "../../stores/features/new-trip/new-trip-config.store";
 
 export default function NewTripPage() {
   const startingPos = useNewTripConfigStore((state) => state.startingPos);

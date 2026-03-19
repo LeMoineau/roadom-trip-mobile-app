@@ -1,4 +1,4 @@
-import { GeoPoint } from "../models/GeoPoint.model";
+import { GeoPoint } from "../../../roadom-trip-api/src/models/GeoPoint.model";
 import { MathUtils } from "./math.utils";
 import * as geolib from "geolib";
 import seaGeoMap from "@geo-maps/earth-seas-10m";

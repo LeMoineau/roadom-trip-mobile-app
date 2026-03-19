@@ -1,15 +1,15 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../../../constants/style/colors";
-import { TripDto } from "../../../shared/types/dto/trip/Trip.dto";
-import Divider from "../misc/Divider";
-import MapTimeline from "../misc/MapTimeline";
+import { Trip } from "../../../models/features/trip.model";
+import Divider from "../../common/misc/Divider";
+import MapTimeline from "../../common/misc/MapTimeline";
 import NextStepDelayItem from "./NextStepDelayItem";
 
 export default function TripPreviewItem({
   trip,
   onPress,
 }: {
-  trip: TripDto;
+  trip: Trip;
   onPress?: () => void;
 }) {
   return (
@@ -55,9 +55,7 @@ export default function TripPreviewItem({
           iconName="clock-o"
         ></TagItem> */}
       </View>
-
       <Divider style={{ marginTop: -5, marginBottom: 5 }}></Divider>
-
       <MapTimeline
         spaceBetweenEachDots={20}
         dots={[

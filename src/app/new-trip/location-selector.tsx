@@ -9,7 +9,7 @@ import LeafletMap from "../../components/common/misc/LeafletMap";
 import { colors } from "../../constants/style/colors";
 import useUserLocation from "../../hooks/common/use-user-location";
 import { GeoPoint } from "../../shared/models/GeoPoint.model";
-import { useNewTripConfigStore } from "../../stores/features/new-trip-config.store";
+import { useNewTripConfigStore } from "../../stores/features/new-trip/new-trip-config.store";
 
 export default function LocationSelectorPage() {
   const { currentPos } = useLocalSearchParams<{ currentPos?: string }>();

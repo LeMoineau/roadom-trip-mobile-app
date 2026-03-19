@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { ScrollView, View } from "react-native";
 import NoArchivedTripsYetItem from "../components/common/items/NoArchivedTripsYetItem";
-import TripPreviewItem from "../components/common/items/TripPreviewItem";
+import TripPreviewItem from "../components/features/index/TripPreviewItem";
 import useArchivedTrips from "../hooks/features/trip/useArchivedTrips";
 
 export default function newTripPage() {

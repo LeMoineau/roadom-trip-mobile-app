@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { storageKeys } from "../../../config/storage-keys";
-import { Trip } from "../../../shared/models/Trip.model";
+import { Trip } from "../../../models/features/trip.model";
 import { isTripDto, TripDto } from "../../../shared/types/dto/trip/Trip.dto";
 import useStorage from "../../common/use-storage";
 

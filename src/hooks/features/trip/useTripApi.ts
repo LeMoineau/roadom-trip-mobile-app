@@ -1,23 +1,25 @@
 import { useState } from "react";
+import { Trip } from "../../../models/features/trip.model";
 import roadomTripApiService from "../../../services/roadom-trip-api.service";
 import { CreatingTripRequest } from "../../../shared/types/dto/trip/CreatingTripRequest";
-import { TripDto } from "../../../shared/types/dto/trip/Trip.dto";
 
 export default function useTripApi() {
   const [loading, setLoading] = useState(false);
-  const [trip, setTrip] = useState<TripDto>();
+  const [trip, setTrip] = useState<Trip>();
   const [error, setError] = useState<Error>();
 
   const createTrip = async (
     req: CreatingTripRequest,
-  ): Promise<TripDto | undefined> => {
+  ): Promise<Trip | undefined> => {
     setLoading(true);
-    const trip = await roadomTripApiService.createTrip(req).catch((err) => {
+    const tripDto = await roadomTripApiService.createTrip(req).catch((err) => {
       setError(err);
       return undefined;
     });
     setLoading(false);
-    if (!!trip) {
+    let trip;
+    if (!!tripDto) {
+      trip = new Trip(tripDto);
       setError(undefined);
       setTrip(trip);
     }

@@ -6,7 +6,7 @@ import FloatingButton from "../../components/common/buttons/FloatingButton";
 import IconButton from "../../components/common/buttons/IconButton";
 import ExpoIcon from "../../components/common/icons/ExpoIcon";
 import { colors } from "../../constants/style/colors";
-import { useNewTripConfigStore } from "../../stores/features/new-trip-config.store";
+import { useNewTripConfigStore } from "../../stores/features/new-trip/new-trip-config.store";
 
 const DEFAULT_DISTANCE = 50;
 type DISTANCE_TYPE = "max" | "min";

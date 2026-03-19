@@ -5,7 +5,7 @@ import FloatingButton from "../components/common/buttons/FloatingButton";
 import OutlineButton from "../components/common/buttons/OutlineButton";
 import ExpoIcon from "../components/common/icons/ExpoIcon";
 import NoTripYetItem from "../components/common/items/NoTripYetItem";
-import TripPreviewItem from "../components/common/items/TripPreviewItem";
+import TripPreviewItem from "../components/features/index/TripPreviewItem";
 import { colors } from "../constants/style/colors";
 import useStoredTrip from "../hooks/features/trip/useStoredTrip";
 

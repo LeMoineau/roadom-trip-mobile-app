@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { GeoPointDto } from "../../shared/types/dto/geo/GeoPoint.dto";
+import { GeoPointDto } from "../../../shared/types/dto/geo/GeoPoint.dto";
 
 const DEFAULT_STATE: State = {
   startingPos: undefined, // new GeoPoint({ lat: 48, lon: 5 }),
