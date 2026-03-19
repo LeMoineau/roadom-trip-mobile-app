@@ -1,35 +1,28 @@
-import axios, { AxiosError } from "axios";
-import { Trip } from "../../../shared/models/Trip.model";
+import { useState } from "react";
+import roadomTripApiService from "../../../services/roadom-trip-api.service";
 import { CreatingTripRequest } from "../../../shared/types/dto/trip/CreatingTripRequest";
 import { TripDto } from "../../../shared/types/dto/trip/Trip.dto";
 
-//10.105.165.167
-//localhost
-const TRIP_API_URL = __DEV__ ? "http://10.105.165.167:3001" : "";
-
 export default function useTripApi() {
-  const createTrip = async (req: CreatingTripRequest): Promise<Trip> => {
-    console.log(TRIP_API_URL);
-    return await axios
-      .request({
-        method: "post",
-        maxBodyLength: Infinity,
-        url: `${TRIP_API_URL}/trips`,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: JSON.stringify(req),
-      })
-      .then((res) => {
-        console.log(res.data);
-        return new Trip(res.data as TripDto);
-      })
-      .catch((err: AxiosError) => {
-        throw new Error(
-          err.response?.data !== undefined ? `${err.response?.data}` : err.code,
-        );
-      });
+  const [loading, setLoading] = useState(false);
+  const [trip, setTrip] = useState<TripDto>();
+  const [error, setError] = useState<Error>();
+
+  const createTrip = async (
+    req: CreatingTripRequest,
+  ): Promise<TripDto | undefined> => {
+    setLoading(true);
+    const trip = await roadomTripApiService.createTrip(req).catch((err) => {
+      setError(err);
+      return undefined;
+    });
+    setLoading(false);
+    if (!!trip) {
+      setError(undefined);
+      setTrip(trip);
+    }
+    return trip;
   };
 
-  return { createTrip };
+  return { loading, error, trip, createTrip };
 }

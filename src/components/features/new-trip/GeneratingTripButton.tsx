@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { colors } from "../../../constants/style/colors";
 import FloatingButton from "../../common/buttons/FloatingButton";
@@ -12,13 +11,13 @@ import ExpoIcon from "../../common/icons/ExpoIcon";
  */
 export default function GeneratingTripButton({
   activated,
+  loading,
   onPress,
 }: {
   activated?: boolean;
+  loading?: boolean;
   onPress?: () => Promise<void>;
 }) {
-  const [loading, setLoading] = useState(false);
-
   return (
     <FloatingButton
       content={loading ? "En cours de génération..." : "Générer un voyage"}
@@ -36,11 +35,8 @@ export default function GeneratingTripButton({
       }
       onPress={() => {
         if (!activated) return;
-        if (onPress) {
-          setLoading(true);
-          onPress().finally(() => {
-            setLoading(false);
-          });
+        if (!!onPress) {
+          onPress();
         }
       }}
     ></FloatingButton>

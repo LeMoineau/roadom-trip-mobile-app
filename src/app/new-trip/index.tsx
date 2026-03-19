@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { View } from "react-native";
 import OutlineButton from "../../components/common/buttons/OutlineButton";
 import ExpoIcon from "../../components/common/icons/ExpoIcon";
@@ -17,18 +17,22 @@ export default function NewTripPage() {
   const distanceMin = useNewTripConfigStore((state) => state.distanceMin);
   const { showToast } = useContext(ToastContext);
 
-  const { createTrip } = useTripApi();
+  const { loading, trip, error, createTrip } = useTripApi();
   const { saveCurrentTrip } = useStoredTrip();
 
   const handleCreatingNewTrip = async () => {
     if (!startingPos || !distanceMax) return;
-    await createTrip({
+    createTrip({
       startingPos,
       distanceMax,
       distanceMin,
-    })
-      .then(async (trip) => {
-        await saveCurrentTrip(trip);
+    });
+  };
+
+  useEffect(() => {
+    console.log(trip);
+    if (!!trip) {
+      saveCurrentTrip(trip).then(() => {
         router.dismissTo({
           pathname: "..",
           params: { newTripCreated: trip.id },
@@ -38,16 +42,20 @@ export default function NewTripPage() {
           bgColor: colors.green[500],
           duration: 3000,
         });
-      })
-      .catch((err: Error) => {
-        showToast({
-          message: err.message,
-          bgColor: colors.red[400],
-          textColor: colors.white,
-          duration: 3000,
-        });
       });
-  };
+    }
+  }, [trip]);
+
+  useEffect(() => {
+    if (!!error) {
+      showToast({
+        message: error.message,
+        bgColor: colors.red[400],
+        textColor: colors.white,
+        duration: 3000,
+      });
+    }
+  }, [error]);
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 20, gap: 20 }}>
@@ -130,6 +138,7 @@ export default function NewTripPage() {
             (!distanceMin || distanceMin < distanceMax)
           )
         }
+        loading={loading}
         onPress={handleCreatingNewTrip}
       ></GeneratingTripButton>
     </View>

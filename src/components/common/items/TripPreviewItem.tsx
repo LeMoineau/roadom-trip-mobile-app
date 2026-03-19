@@ -1,16 +1,15 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../../../constants/style/colors";
-import { Trip } from "../../../shared/models/Trip.model";
-import TagItem from "../../common/items/TagItem";
-import ExpoIcon from "../icons/ExpoIcon";
+import { TripDto } from "../../../shared/types/dto/trip/Trip.dto";
 import Divider from "../misc/Divider";
 import MapTimeline from "../misc/MapTimeline";
+import NextStepDelayItem from "./NextStepDelayItem";
 
 export default function TripPreviewItem({
   trip,
   onPress,
 }: {
-  trip: Trip;
+  trip: TripDto;
   onPress?: () => void;
 }) {
   return (
@@ -49,17 +48,18 @@ export default function TripPreviewItem({
         >
           Voyage actuel
         </Text>
-        <TagItem
+        {/* <TagItem
           text="En cours"
           bgColor={colors.green[100]}
           textColor={colors.green[500]}
           iconName="clock-o"
-        ></TagItem>
+        ></TagItem> */}
       </View>
 
       <Divider style={{ marginTop: -5, marginBottom: 5 }}></Divider>
 
       <MapTimeline
+        spaceBetweenEachDots={20}
         dots={[
           {
             desc: (
@@ -74,42 +74,57 @@ export default function TripPreviewItem({
                   {trip.startingPos.label}
                 </Text>
                 <Text style={{ color: colors.gray[600], fontSize: 12 }}>
-                  {trip.startingPos.lat}, {trip.startingPos.lon}
+                  {trip.startingPos.lat.toFixed(3)},{" "}
+                  {trip.startingPos.lon.toFixed(3)}
                 </Text>
               </View>
             ),
           },
           {
             desc: (
-              <View
-                style={{
-                  padding: 10,
-                  borderRadius: 10,
-                  backgroundColor: colors.yellow[100],
-                  borderWidth: 1,
-                  borderColor: colors.yellow[300],
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 7,
-                  paddingRight: 15,
-                }}
-              >
-                <ExpoIcon
-                  name="info-outline"
-                  size={15}
-                  style={{ color: colors.yellow[800] }}
-                ></ExpoIcon>
-                <Text style={{ fontSize: 12, color: colors.yellow[800] }}>
-                  Prochain indice dans 2min
+              <View style={{ marginTop: 0 }}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 600,
+                    color: colors.gray[800],
+                  }}
+                >
+                  {trip.endingPos.label}
+                </Text>
+                <Text style={{ color: colors.gray[600], fontSize: 12 }}>
+                  ???, ???
                 </Text>
               </View>
+              // <View
+              //   style={{
+              //     padding: 10,
+              //     borderRadius: 10,
+              //     backgroundColor: colors.yellow[100],
+              //     borderWidth: 1,
+              //     borderColor: colors.yellow[300],
+              //     display: "flex",
+              //     flexDirection: "row",
+              //     alignItems: "center",
+              //     gap: 7,
+              //     paddingRight: 15,
+              //   }}
+              // >
+              //   <ExpoIcon
+              //     name="info-outline"
+              //     size={15}
+              //     style={{ color: colors.yellow[800] }}
+              //   ></ExpoIcon>
+              //   <Text style={{ fontSize: 12, color: colors.yellow[800] }}>
+              //     Prochain indice dans 2min
+              //   </Text>
+              // </View>
             ),
           },
         ]}
       ></MapTimeline>
-      <Divider></Divider>
-      <View
+      {/* <Divider></Divider> */}
+      {/* <View
         style={{
           display: "flex",
           flexDirection: "row",
@@ -124,7 +139,8 @@ export default function TripPreviewItem({
         <Text style={{ flex: 1, width: "100%", color: colors.gray[600] }}>
           Notification de proximité à 400km du point d&apos;arrivée
         </Text>
-      </View>
+      </View> */}
+      <NextStepDelayItem trip={trip}></NextStepDelayItem>
     </TouchableOpacity>
   );
 }

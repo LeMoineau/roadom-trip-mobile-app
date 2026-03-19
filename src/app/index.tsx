@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
-import { Text, View } from "react-native";
+import { RefreshControl, ScrollView, Text, View } from "react-native";
 import FloatingButton from "../components/common/buttons/FloatingButton";
 import OutlineButton from "../components/common/buttons/OutlineButton";
 import ExpoIcon from "../components/common/icons/ExpoIcon";
@@ -13,10 +13,9 @@ export default function Index() {
   const { newTripCreated } = useLocalSearchParams<{
     newTripCreated?: string;
   }>();
-  const { trip, loadCurrentTrip } = useStoredTrip();
+  const { trip, refreshing, loadCurrentTrip, refresh } = useStoredTrip();
 
   useEffect(() => {
-    console.log(newTripCreated);
     loadCurrentTrip();
   }, [newTripCreated]);
 
@@ -31,25 +30,41 @@ export default function Index() {
         gap: 20,
       }}
     >
-      <Text style={{ fontSize: 25, fontWeight: 500 }}>Vos Voyages</Text>
-      {trip ? (
-        <TripPreviewItem
-          trip={trip}
-          onPress={() => {
-            router.push({ pathname: "/trips/[id]", params: { id: trip.id } });
-          }}
-        ></TripPreviewItem>
-      ) : (
-        <NoTripYetItem></NoTripYetItem>
-      )}
-      <OutlineButton
-        content="Historiques des voyages"
-        appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
-        onPress={() => {
-          router.push("/history");
+      <ScrollView
+        style={{
+          flex: 1,
+          width: "100%",
+          gap: 20,
         }}
-        style={{ width: "100%" }}
-      ></OutlineButton>
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={refresh}
+          ></RefreshControl>
+        }
+      >
+        <Text style={{ fontSize: 25, fontWeight: 500 }}>Vos Voyages</Text>
+        <View style={{ height: 20 }}></View>
+        {trip ? (
+          <TripPreviewItem
+            trip={trip}
+            onPress={() => {
+              router.push({ pathname: "/trips/[id]", params: { id: trip.id } });
+            }}
+          ></TripPreviewItem>
+        ) : (
+          <NoTripYetItem></NoTripYetItem>
+        )}
+        <View style={{ height: 20 }}></View>
+        <OutlineButton
+          content="Historiques des voyages"
+          appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
+          onPress={() => {
+            router.push("/history");
+          }}
+          style={{ width: "100%" }}
+        ></OutlineButton>
+      </ScrollView>
       <FloatingButton
         content="Nouveau Voyage"
         appendIcon={

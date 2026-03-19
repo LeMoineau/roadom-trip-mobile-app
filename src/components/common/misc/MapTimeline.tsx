@@ -145,9 +145,8 @@ export default function MapTimeline({
         {dots.map((props, index) => {
           const last = props.last ?? index === dots.length - 1;
           return (
-            <>
+            <View key={index} style={{ width: "100%" }}>
               <MapTimelineDot
-                key={`dots-${index}`}
                 color={color}
                 gapBetweenItemsAndDesc={gapBetweenItemsAndDesc}
                 last={last}
@@ -155,14 +154,13 @@ export default function MapTimeline({
               ></MapTimelineDot>
               {!last && spaceBetweenEachDots > 0 && (
                 <MapTimelineSeparator
-                  key={`separator-${index}`}
                   height={spaceBetweenEachDots}
                   color={color}
                   gapBetweenItemsAndDesc={gapBetweenItemsAndDesc}
                   {...(separators.length > index ? separators[index] : {})}
                 ></MapTimelineSeparator>
               )}
-            </>
+            </View>
           );
         })}
       </View>
