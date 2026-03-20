@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
-import { RefreshControl, ScrollView, Text, View } from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
 import FloatingButton from "../components/common/buttons/FloatingButton";
 import OutlineButton from "../components/common/buttons/OutlineButton";
 import ExpoIcon from "../components/common/icons/ExpoIcon";
@@ -43,8 +43,7 @@ export default function Index() {
           ></RefreshControl>
         }
       >
-        <Text style={{ fontSize: 25, fontWeight: 500 }}>Vos Voyages</Text>
-        <View style={{ height: 20 }}></View>
+        {/* <Text style={{ fontSize: 25, fontWeight: 500 }}>Vos Voyages</Text> */}
         {trip ? (
           <TripPreviewItem
             trip={trip}

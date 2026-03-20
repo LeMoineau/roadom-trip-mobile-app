@@ -46,7 +46,7 @@ export default function TripPreviewItem({
             color: colors.black,
           }}
         >
-          Voyage actuel
+          Votre Road-Trip
         </Text>
         {/* <TagItem
           text="En cours"

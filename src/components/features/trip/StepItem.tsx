@@ -22,7 +22,7 @@ export default function StepItem({ step }: { step: Step }) {
       }}
     >
       <View style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <Text style={{ fontWeight: 600 }}>{step.type}</Text>
+        <Text style={{ fontWeight: 600 }}>{step.name}</Text>
         <Text style={{ fontSize: 12 }}>{step.stepType}</Text>
       </View>
       <Divider style={{ width: "100%" }}></Divider>

@@ -26,7 +26,7 @@ export default function NoTripYetItem() {
         style={{ color: colors.gray[500] }}
       ></AntDesign>
       <Text style={{ color: colors.gray[500] }}>
-        Pas de voyages en cours...
+        Pas de Road-Trip en cours...
       </Text>
     </View>
   );

@@ -34,7 +34,7 @@ export default function RootLayout() {
           />
           <Stack.Screen
             name="new-trip/index"
-            options={{ headerTitle: "Nouveau voyage" }}
+            options={{ headerTitle: "Nouveau Road-Trip" }}
           />
           <Stack.Screen
             name="new-trip/location-selector"
@@ -54,7 +54,7 @@ export default function RootLayout() {
           />
           <Stack.Screen
             name="trips/[id]"
-            options={{ headerTitle: "Voyage Actuel" }}
+            options={{ headerTitle: "Votre Road-Trip" }}
           />
           <Stack.Screen
             name="hints/[id]"
