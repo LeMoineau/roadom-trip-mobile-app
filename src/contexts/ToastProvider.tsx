@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Toaster from "../components/common/misc/toaster";
-import { ToastMessage } from "../types/ToastMessage";
+import { ToastMessage } from "../types/common/ToastMessage";
 import { ToastContext } from "./contexts";
 
 export default function ToastProvider({

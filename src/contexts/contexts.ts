@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import { JSONObject } from "../shared/types/primitives/JsonObject";
-import { ToastMessage } from "../types/ToastMessage";
+import { ToastMessage } from "../types/common/ToastMessage";
 
 export const ToastContext = createContext({
   currentToast: {} as ToastMessage,

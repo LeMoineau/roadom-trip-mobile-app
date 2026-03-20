@@ -1,12 +1,18 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../../../constants/style/colors";
 import { Step } from "../../../models/features/step.model";
 import ExpoIcon from "../../common/icons/ExpoIcon";
 import Divider from "../../common/misc/Divider";
 
-export default function StepItem({ step }: { step: Step }) {
+export default function StepItem({
+  step,
+  onPress,
+}: {
+  step: Step;
+  onPress?: () => void;
+}) {
   return (
-    <View
+    <TouchableOpacity
       style={{
         padding: 20,
         borderRadius: 10,
@@ -19,6 +25,9 @@ export default function StepItem({ step }: { step: Step }) {
         paddingRight: 15,
         flex: 1,
         gap: 20,
+      }}
+      onPress={() => {
+        onPress && onPress();
       }}
     >
       <View style={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -42,6 +51,6 @@ export default function StepItem({ step }: { step: Step }) {
         </Text>
         <ExpoIcon name="chevron-forward" size={20}></ExpoIcon>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }

@@ -8,4 +8,9 @@ export namespace ArrayUtils {
     const index = MathUtils.getRandomInt(arr.length);
     return arr[index];
   }
+
+  export function itemOrVoid<T>(item?: T | false): T[] {
+    if (!!!item) return [];
+    return [item];
+  }
 }

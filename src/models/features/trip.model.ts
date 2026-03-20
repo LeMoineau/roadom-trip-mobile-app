@@ -1,3 +1,4 @@
+import { AllIconNames } from "../../components/common/icons/ExpoIcon";
 import { TripDto } from "../../shared/types/dto/trip/Trip.dto";
 import { Step } from "./step.model";
 
@@ -26,6 +27,14 @@ export class Trip {
     return this.dto.createdAt;
   }
 
+  get status() {
+    return this.dto.status;
+  }
+
+  get personAskingAvailable() {
+    return this.dto.personAskingAvailable;
+  }
+
   getNextStep(options?: {}): Step | undefined {
     for (let step of this.steps) {
       if (!!!step.reach) {
@@ -42,6 +51,21 @@ export class Trip {
       }
     }
     return;
+  }
+
+  getStatusStyle(): { label: string; icon: AllIconNames; color: string } {
+    switch (this.status) {
+      case "new":
+        return { label: "Nouveau", icon: "new-releases", color: "gray" };
+      case "ongoing":
+        return { label: "En cours", icon: "clock-o", color: "green" };
+      case "finish":
+        return { label: "Terminé", icon: "done", color: "green" };
+      case "abandoned":
+        return { label: "Abandonné", icon: "close", color: "red" };
+      default:
+        return { label: "En cours", icon: "clock-o", color: "green" };
+    }
   }
 
   toDto() {

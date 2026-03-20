@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { colors } from "../../../constants/style/colors";
-import { Trip } from "../../../models/features/trip.model";
+import { Step } from "../../../models/features/step.model";
 import { ProximityNotificationDto } from "../../../shared/types/dto/notifications/ProximityNotification.dto";
 import ExpoIcon from "../icons/ExpoIcon";
 
-export default function ProximityNotificationItem({ trip }: { trip: Trip }) {
+export default function ProximityNotificationItem({
+  currentProximityNotif,
+}: {
+  currentProximityNotif?: Step;
+}) {
   const [range, setRange] = useState<number | undefined>(400);
   const notificationStatus = !!range ? "on" : "off";
 
   useEffect(() => {
-    const currentProximityNotif = trip.getActualProximityNotification();
     if (!!!currentProximityNotif) {
       setRange(undefined);
     } else {

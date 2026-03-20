@@ -2,8 +2,6 @@ import { stepsNames } from "../../constants/features/steps-name";
 import { ProximityNotificationDto } from "../../shared/types/dto/notifications/ProximityNotification.dto";
 import { StepDto } from "../../shared/types/dto/Step.dto";
 
-const DEFAULT_NAME = "Inconnu au bataillon";
-
 export class Step {
   dto: StepDto;
 
@@ -28,9 +26,10 @@ export class Step {
       return `Notification de Proximité à ${(this.dto as ProximityNotificationDto).range}km`;
     }
     if (this.type in stepsNames) {
-      return (stepsNames as any)[this.type];
+      const name = (stepsNames as any)[this.type];
+      if (name.length <= 0) return this.type;
     }
-    return DEFAULT_NAME;
+    return this.type;
   }
 
   get stepType() {

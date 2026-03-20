@@ -53,12 +53,12 @@ export default function RootLayout() {
             options={{ headerTitle: "Historiques des voyages" }}
           />
           <Stack.Screen
-            name="trips/[id]"
+            name="trips/[id]/index"
             options={{ headerTitle: "Votre Road-Trip" }}
           />
           <Stack.Screen
-            name="hints/[id]"
-            options={{ headerTitle: "Voyage Actuel" }}
+            name="trips/[id]/steps/[index]"
+            options={{ headerTitle: "Informations étape" }}
           />
         </Stack>
       </ToastProvider>
