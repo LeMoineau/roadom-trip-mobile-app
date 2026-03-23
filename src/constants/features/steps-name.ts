@@ -16,7 +16,7 @@ export const stepsNames = {
   "dish-hint": "Intervention de Ratatouille",
   "departement-flag-hint": "",
   "haut-gauche-bas-droite-hint": "",
-  "near-city-hint": "",
+  "near-city-hint": "Le GPS",
   "precise-description-hint": "",
   "rebus-hint": "",
   "shoes-hint": "Conseil d'un Hobbit",
