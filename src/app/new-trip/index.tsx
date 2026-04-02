@@ -30,7 +30,6 @@ export default function NewTripPage() {
   };
 
   useEffect(() => {
-    console.log(trip);
     if (!!trip) {
       saveCurrentTrip(trip).then(() => {
         router.dismissTo({

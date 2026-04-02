@@ -18,7 +18,6 @@ export default function TripPage() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    console.log("index", index);
     if (!!trip && !!index && trip.steps.length > parseInt(index)) {
       const _step = trip.steps[parseInt(index)];
       setStep(_step);

@@ -32,7 +32,7 @@ export default function NextStepDelayItem({ trip }: { trip: Trip }) {
     }
   });
 
-  if (nextStepStatus === "waiting") {
+  if (nextStepStatus === "finish") {
     return <NoMoreStepItem></NoMoreStepItem>;
   }
 

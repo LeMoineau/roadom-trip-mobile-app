@@ -27,7 +27,7 @@ export class Step {
     }
     if (this.type in stepsNames) {
       const name = (stepsNames as any)[this.type];
-      if (name.length <= 0) return this.type;
+      if (name.length > 0) return name;
     }
     return this.type;
   }

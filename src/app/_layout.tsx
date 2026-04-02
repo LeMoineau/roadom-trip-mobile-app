@@ -53,7 +53,7 @@ export default function RootLayout() {
             options={{ headerTitle: "Historiques des voyages" }}
           />
           <Stack.Screen
-            name="trips/[id]/index"
+            name="trips/[id]/(tabs)"
             options={{ headerTitle: "Votre Road-Trip" }}
           />
           <Stack.Screen

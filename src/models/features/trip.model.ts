@@ -45,7 +45,8 @@ export class Trip {
   }
 
   getActualProximityNotification(): Step | undefined {
-    for (let step of this.steps) {
+    for (let i = this.steps.length - 1; i >= 0; i--) {
+      const step = this.steps[i];
       if (step.type === "proximity-notification" && !!step.reach) {
         return step;
       }

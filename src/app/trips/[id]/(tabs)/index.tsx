@@ -1,21 +1,18 @@
 import { router } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
-import OutlineButton from "../../../components/common/buttons/OutlineButton";
-import ExpoIcon, {
-  AllIconNames,
-} from "../../../components/common/icons/ExpoIcon";
-import NoMoreStepItem from "../../../components/common/items/NoMoreStepItem";
-import NoTripYetItem from "../../../components/common/items/NoTripYetItem";
-import ProximityNotificationItem from "../../../components/common/items/ProximityNotificationItem";
-import DescriptionSection from "../../../components/common/misc/DescriptionSection";
-import Divider from "../../../components/common/misc/Divider";
-import MapTimeline from "../../../components/common/misc/MapTimeline";
-import NextStepItem from "../../../components/features/trip/NextStepItem";
-import StepItem from "../../../components/features/trip/StepItem";
-import { colors } from "../../../constants/style/colors";
-import { ArrayUtils } from "../../../shared/utils/array.utils";
-import { DateUtils } from "../../../shared/utils/date.utils";
-import { useTripStore } from "../../../stores/features/trip/trip.store";
+import { AllIconNames } from "../../../../components/common/icons/ExpoIcon";
+import NoMoreStepItem from "../../../../components/common/items/NoMoreStepItem";
+import NoTripYetItem from "../../../../components/common/items/NoTripYetItem";
+import ProximityNotificationItem from "../../../../components/common/items/ProximityNotificationItem";
+import DescriptionSection from "../../../../components/common/misc/DescriptionSection";
+import Divider from "../../../../components/common/misc/Divider";
+import MapTimeline from "../../../../components/common/misc/MapTimeline";
+import NextStepItem from "../../../../components/features/trip/NextStepItem";
+import StepItem from "../../../../components/features/trip/StepItem";
+import { colors } from "../../../../constants/style/colors";
+import { ArrayUtils } from "../../../../shared/utils/array.utils";
+import { DateUtils } from "../../../../shared/utils/date.utils";
+import { useTripStore } from "../../../../stores/features/trip/trip.store";
 
 export default function TripPage() {
   const trip = useTripStore((state) => state.trip);
@@ -113,30 +110,6 @@ export default function TripPage() {
             ]}
           ></MapTimeline>
           {!!!trip.getNextStep() && <NoMoreStepItem></NoMoreStepItem>}
-          <Divider style={{ marginTop: 20 }}></Divider>
-          <OutlineButton
-            content="Forcer le prochain indice"
-            prependIcon={<ExpoIcon name="play-forward" size={20}></ExpoIcon>}
-          ></OutlineButton>
-          <OutlineButton
-            content="Donner sa langue au chat"
-            prependIcon={<ExpoIcon name="location-on" size={20}></ExpoIcon>}
-          ></OutlineButton>
-          <OutlineButton
-            content="Terminer le Road-Trip"
-            style={{
-              backgroundColor: colors.red[100],
-              borderColor: colors.red[200],
-            }}
-            textStyle={{ color: colors.red[500] }}
-            prependIcon={
-              <ExpoIcon
-                name="close"
-                size={20}
-                style={{ color: colors.red[500] }}
-              ></ExpoIcon>
-            }
-          ></OutlineButton>
           <View style={{ height: 150 }}></View>
         </View>
       </ScrollView>

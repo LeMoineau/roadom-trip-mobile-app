@@ -2,7 +2,7 @@ import { Asset } from "expo-asset";
 import { File } from "expo-file-system";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
-import { LeafletView } from "react-native-leaflet-view";
+import { LeafletView, MapShape } from "react-native-leaflet-view";
 
 const DEFAULT_LOCATION = {
   latitude: 48.11585637673801,
@@ -15,12 +15,14 @@ export default function LeafletMap({
   defaultZoom = DEFAULT_ZOOM,
   putMarkerOnPress,
   putMarkerAtStartingCenter,
+  mapShapes,
   onPressPosition,
 }: {
   defaultPos?: { latitude: number; longitude: number };
   defaultZoom?: number;
   putMarkerOnPress?: boolean;
   putMarkerAtStartingCenter?: boolean;
+  mapShapes?: MapShape[];
   onPressPosition?: (pos: [number, number]) => void;
 }) {
   const [webViewContent, setWebViewContent] = useState<string | null>(null);
@@ -54,8 +56,6 @@ export default function LeafletMap({
   if (!webViewContent) {
     return <ActivityIndicator size="large" />;
   }
-
-  console.log(putMarkerAtStartingCenter, defaultPos);
 
   return (
     <LeafletView
@@ -91,10 +91,10 @@ export default function LeafletMap({
         lat: defaultPos.latitude,
         lng: defaultPos.longitude,
       }}
+      mapShapes={mapShapes}
       zoom={defaultZoom}
       onMessageReceived={(message) => {
         if (message.event === "onMapClicked") {
-          console.log(message);
           const touchPos = message.payload?.touchLatLng;
           onPressPosition && onPressPosition([touchPos.lat, touchPos.lng]);
           putMarkerOnPress && setSelectedPos([touchPos.lat, touchPos.lng]);

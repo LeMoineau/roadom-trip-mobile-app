@@ -21,7 +21,7 @@ export default function ProximityNotificationItem({
         (currentProximityNotif.toDto() as ProximityNotificationDto).range,
       );
     }
-  });
+  }, [currentProximityNotif]);
 
   return (
     <View

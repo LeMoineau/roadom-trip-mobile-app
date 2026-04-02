@@ -20,7 +20,6 @@ export default function DistanceSelector() {
     type: DISTANCE_TYPE;
     defaultValue?: string;
   }>();
-  console.log("defaultV", defaultValue);
   const updateDistance = useNewTripConfigStore((state) => state.updateDistance);
   const [distance, setDistance] = useState(
     `${defaultValue && defaultValue.length > 0 ? defaultValue : DEFAULT_DISTANCE}`,

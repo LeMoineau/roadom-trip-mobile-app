@@ -7,7 +7,7 @@ class RoadomTripApiService {
   instance: AxiosInstance;
 
   constructor() {
-    this.baseURL = "http://10.201.95.167:3001"; // config.getEnv().roadomTripApiURL;
+    this.baseURL = "http://10.220.238.167:3001"; // config.getEnv().roadomTripApiURL;
     this.instance = axios.create({
       baseURL: this.baseURL,
       headers: {
@@ -28,7 +28,7 @@ class RoadomTripApiService {
         data: { ...req },
       })
       .then((res) => {
-        console.log(res.data);
+        console.log("created trip", res.data);
         if (!!!res.data) {
           console.error(`error getting trip creation response`, req, res);
           return undefined;
