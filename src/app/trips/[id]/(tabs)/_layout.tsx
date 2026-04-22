@@ -9,7 +9,7 @@ export default function TripPageLayout() {
         tabBarActiveTintColor: "blue",
         headerShown: false,
         tabBarPosition: "bottom",
-        tabBarStyle: { height: 20 },
+        tabBarStyle: { height: 40 },
         // tabBarIconStyle: { display: "none" },
         sceneStyle: { backgroundColor: colors.white },
         animation: "shift",

@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FloatingButton from "../../components/common/buttons/FloatingButton";
 import OutlineButton from "../../components/common/buttons/OutlineButton";
 import ExpoIcon from "../../components/common/icons/ExpoIcon";
-import LeafletMap from "../../components/common/misc/LeafletMap";
+import LeafletMap from "../../components/common/misc/leaflet-map/LeafletMap";
 import { colors } from "../../constants/style/colors";
 import useUserLocation from "../../hooks/common/use-user-location";
 import { GeoPoint } from "../../shared/models/GeoPoint.model";
@@ -95,21 +95,11 @@ export default function LocationSelectorPage() {
 
   return (
     <SafeAreaView edges={{ top: "off" }} style={{ flex: 1 }}>
-      <LeafletMap
-        defaultPos={
-          selectedPos
-            ? { latitude: selectedPos[0], longitude: selectedPos[1] }
-            : undefined
-        }
-        putMarkerOnPress
-        putMarkerAtStartingCenter={!!selectedPos}
-        onPressPosition={setSelectedPos}
-      ></LeafletMap>
       <View
         style={{
           backgroundColor: colors.white,
           paddingHorizontal: 20,
-          paddingTop: 50,
+          paddingTop: 20,
           borderBottomWidth: 1,
           borderBottomColor: colors.gray[300],
         }}
@@ -147,6 +137,16 @@ export default function LocationSelectorPage() {
           onPress={handleGettingUserLocation}
         ></OutlineButton>
       </View>
+      <LeafletMap
+        defaultPos={
+          selectedPos
+            ? { latitude: selectedPos[0], longitude: selectedPos[1] }
+            : undefined
+        }
+        putMarkerOnPress
+        putMarkerAtStartingCenter={!!selectedPos}
+        onPressPosition={setSelectedPos}
+      ></LeafletMap>
       {selectedPos && (
         <FloatingButton
           content="Valider la position"

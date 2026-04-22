@@ -54,7 +54,7 @@ export default function LeafletMap({
   }, []);
 
   if (!webViewContent) {
-    return <ActivityIndicator size="large" />;
+    return <ActivityIndicator size="large" style={{ marginTop: 30 }} />;
   }
 
   return (

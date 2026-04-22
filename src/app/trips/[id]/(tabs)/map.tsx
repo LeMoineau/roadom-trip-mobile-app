@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { MapShapeType } from "react-native-leaflet-view";
-import LeafletMap from "../../../../components/common/misc/LeafletMap";
+import LeafletMap from "../../../../components/common/misc/leaflet-map/LeafletMap";
 
 export default function TripMapTab() {
   return (

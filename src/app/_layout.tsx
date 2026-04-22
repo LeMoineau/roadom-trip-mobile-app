@@ -38,11 +38,17 @@ export default function RootLayout() {
           />
           <Stack.Screen
             name="new-trip/location-selector"
-            options={{ headerShown: false }}
+            options={{
+              headerTitle: "Sélectionnez une position",
+              headerShown: true,
+            }}
           />
           <Stack.Screen
             name="new-trip/distance-selector"
-            options={{ headerShown: false }}
+            options={{
+              headerTitle: "Sélectionnez une distance",
+              headerShown: true,
+            }}
           />
           <Stack.Screen
             name="settings"

@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import config from "../config/config";
 import { CreatingTripRequest } from "../shared/types/dto/trip/CreatingTripRequest";
 import { TripDto } from "../shared/types/dto/trip/Trip.dto";
 
@@ -7,7 +8,7 @@ class RoadomTripApiService {
   instance: AxiosInstance;
 
   constructor() {
-    this.baseURL = "http://10.220.238.167:3001"; // config.getEnv().roadomTripApiURL;
+    this.baseURL = config.getEnv().roadomTripApiURL;
     this.instance = axios.create({
       baseURL: this.baseURL,
       headers: {
