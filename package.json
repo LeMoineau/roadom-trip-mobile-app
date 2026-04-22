@@ -6,8 +6,8 @@
     "update:shared": "rimraf ./src/shared && copyfiles -u 3 ./../shared/src/**/* ./src/shared/",
     "start": "expo start",
     "dev": "dotenv -e .env.development -- expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
     "build:web": "npx expo export -p web"
