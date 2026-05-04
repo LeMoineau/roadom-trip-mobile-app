@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useContext } from "react";
 import { ScrollView, View } from "react-native";
 import OutlineButton from "../../../../components/common/buttons/OutlineButton";
@@ -7,12 +7,13 @@ import NoTripYetItem from "../../../../components/common/items/NoTripYetItem";
 import { colors } from "../../../../constants/style/colors";
 import { ToastContext } from "../../../../contexts/contexts";
 import useArchivedTrips from "../../../../hooks/features/trip/useArchivedTrips";
-import { useTripStore } from "../../../../stores/features/trip/trip.store";
+import useTripRepository from "../../../../hooks/features/trip/useTripRepository";
 
 export default function TripSettingTab() {
-  const trip = useTripStore((state) => state.trip);
   const { archiveTrip } = useArchivedTrips();
   const { showToast } = useContext(ToastContext);
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { trip } = useTripRepository({ id });
 
   if (!!!trip) {
     return (

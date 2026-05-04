@@ -1,8 +1,13 @@
+import { useLocalSearchParams } from "expo-router";
 import { View } from "react-native";
 import { MapShapeType } from "react-native-leaflet-view";
 import LeafletMap from "../../../../components/common/misc/leaflet-map/LeafletMap";
+import useTripRepository from "../../../../hooks/features/trip/useTripRepository";
 
 export default function TripMapTab() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { trip } = useTripRepository({ id });
+
   return (
     <View style={{ flex: 1 }}>
       <LeafletMap

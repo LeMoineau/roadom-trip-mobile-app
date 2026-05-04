@@ -19,7 +19,7 @@ type Action = {
 };
 
 export const useTripStore = create<State & Action>((set) => {
-  const { getJson, saveJson } = useStorage();
+  const { getJson, saveJson, removeItem } = useStorage();
 
   getJson(storageKeys.CURRENT_TRIP).then((res) => {
     if (!!res && isTripDto(res)) {
@@ -45,6 +45,7 @@ export const useTripStore = create<State & Action>((set) => {
      */
     resetTrip() {
       set({ trip: undefined });
+      removeItem(storageKeys.CURRENT_TRIP);
     },
 
     /**

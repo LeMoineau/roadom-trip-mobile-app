@@ -1,32 +1,14 @@
-import { Text, View } from "react-native";
 import { colors } from "../../../constants/style/colors";
+import TripStatusItem from "./TripStatusItem";
 
 export default function NoMoreStepItem() {
   return (
-    <View
-      style={{
-        padding: 20,
-        borderRadius: 10,
-        backgroundColor: colors.gray[50],
-        borderWidth: 1,
-        borderColor: colors.gray[100],
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        paddingRight: 15,
-        flex: 1,
-        gap: 20,
-      }}
-    >
-      <View
-        style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10 }}
-      >
-        <Text style={{ fontWeight: 600 }}>Plus de prochaine étape !</Text>
-        <Text style={{ fontSize: 12 }}>
-          Vous avez épuisé tous les indices et challenges disponibles ! Bon
-          courage pour trouver votre destination !
-        </Text>
-      </View>
-    </View>
+    <TripStatusItem
+      bgColor={colors.gray[50]}
+      borderColor={colors.gray[100]}
+      textColor={colors.gray[500]}
+      title="Plus de prochaine étape !"
+      desc="Vous avez épuisé tous les indices et challenges disponibles ! Bon courage pour trouver votre destination !"
+    ></TripStatusItem>
   );
 }

@@ -20,6 +20,7 @@ export default function HistoryPage() {
         paddingHorizontal: 20,
         paddingTop: 20,
         paddingBottom: 50,
+        gap: 20,
       }}
     >
       {archivedTrips ? (

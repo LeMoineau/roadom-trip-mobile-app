@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 import { AllIconNames } from "../../../../components/common/icons/ExpoIcon";
 import NoMoreStepItem from "../../../../components/common/items/NoMoreStepItem";
@@ -10,13 +10,16 @@ import MapTimeline from "../../../../components/common/misc/MapTimeline";
 import NextStepItem from "../../../../components/features/trip/NextStepItem";
 import StepItem from "../../../../components/features/trip/StepItem";
 import { colors } from "../../../../constants/style/colors";
+import useTripRepository from "../../../../hooks/features/trip/useTripRepository";
 import { ArrayUtils } from "../../../../shared/utils/array.utils";
 import { DateUtils } from "../../../../shared/utils/date.utils";
 import { useTripStore } from "../../../../stores/features/trip/trip.store";
 
 export default function TripPage() {
-  const trip = useTripStore((state) => state.trip);
   const updateTrip = useTripStore((state) => state.updateTrip);
+
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { trip } = useTripRepository({ id });
 
   if (!!!trip) {
     return (
