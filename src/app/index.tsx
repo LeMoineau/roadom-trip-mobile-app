@@ -1,5 +1,5 @@
-import { router, useLocalSearchParams } from "expo-router";
-import { useEffect } from "react";
+import { router } from "expo-router";
+import { useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 import FloatingButton from "../components/common/buttons/FloatingButton";
 import OutlineButton from "../components/common/buttons/OutlineButton";
@@ -7,17 +7,18 @@ import ExpoIcon from "../components/common/icons/ExpoIcon";
 import NoTripYetItem from "../components/common/items/NoTripYetItem";
 import TripPreviewItem from "../components/features/index/TripPreviewItem";
 import { colors } from "../constants/style/colors";
-import useStoredTrip from "../hooks/features/trip/useStoredTrip";
+import { useTripStore } from "../stores/features/trip/trip.store";
 
 export default function Index() {
-  const { newTripCreated } = useLocalSearchParams<{
-    newTripCreated?: string;
-  }>();
-  const { trip, refreshing, loadCurrentTrip, refresh } = useStoredTrip();
+  const [refreshing, setRefreshing] = useState(false);
+  const trip = useTripStore((state) => state.trip);
 
-  useEffect(() => {
-    loadCurrentTrip();
-  }, [newTripCreated]);
+  const handlePageRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  };
 
   return (
     <View
@@ -39,7 +40,7 @@ export default function Index() {
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={refresh}
+            onRefresh={handlePageRefresh}
           ></RefreshControl>
         }
       >

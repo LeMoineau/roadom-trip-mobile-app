@@ -6,9 +6,10 @@ import ExpoIcon from "../../components/common/icons/ExpoIcon";
 import GeneratingTripButton from "../../components/features/new-trip/GeneratingTripButton";
 import { colors } from "../../constants/style/colors";
 import { ToastContext } from "../../contexts/contexts";
-import useStoredTrip from "../../hooks/features/trip/useStoredTrip";
+import useArchivedTrips from "../../hooks/features/trip/useArchivedTrips";
 import useTripApi from "../../hooks/features/trip/useTripApi";
 import { useNewTripConfigStore } from "../../stores/features/new-trip/new-trip-config.store";
+import { useTripStore } from "../../stores/features/trip/trip.store";
 
 export default function NewTripPage() {
   const startingPos = useNewTripConfigStore((state) => state.startingPos);
@@ -17,8 +18,10 @@ export default function NewTripPage() {
   const distanceMin = useNewTripConfigStore((state) => state.distanceMin);
   const { showToast } = useContext(ToastContext);
 
-  const { loading, trip, error, createTrip } = useTripApi();
-  const { saveCurrentTrip } = useStoredTrip();
+  const { loading, trip: beingCreatedTrip, error, createTrip } = useTripApi();
+  const { archiveTrip } = useArchivedTrips();
+  const updateTrip = useTripStore((state) => state.updateTrip);
+  const trip = useTripStore((state) => state.trip);
 
   const handleCreatingNewTrip = async () => {
     if (!startingPos || !distanceMax) return;
@@ -30,20 +33,22 @@ export default function NewTripPage() {
   };
 
   useEffect(() => {
-    if (!!trip) {
-      saveCurrentTrip(trip).then(() => {
-        router.dismissTo({
-          pathname: "..",
-          params: { newTripCreated: trip.id },
-        });
-        showToast({
-          message: "Nouveau road-trip généré !",
-          bgColor: colors.green[500],
-          duration: 3000,
-        });
+    if (!!beingCreatedTrip) {
+      if (!!trip) {
+        archiveTrip(trip);
+      }
+      updateTrip(beingCreatedTrip);
+      router.dismissTo({
+        pathname: "..",
+        params: { newTripCreated: beingCreatedTrip.id },
+      });
+      showToast({
+        message: "Nouveau road-trip généré !",
+        bgColor: colors.green[500],
+        duration: 3000,
       });
     }
-  }, [trip]);
+  }, [beingCreatedTrip]);
 
   useEffect(() => {
     if (!!error) {

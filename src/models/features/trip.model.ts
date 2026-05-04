@@ -69,6 +69,10 @@ export class Trip {
     }
   }
 
+  archive() {
+    this.dto.status = "finish";
+  }
+
   toDto() {
     return this.dto;
   }

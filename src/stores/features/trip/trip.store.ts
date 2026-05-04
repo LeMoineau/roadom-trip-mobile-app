@@ -15,6 +15,7 @@ type State = {
 type Action = {
   updateTrip: (trip: Trip) => void;
   reset: () => void;
+  resetTrip: () => void;
 };
 
 export const useTripStore = create<State & Action>((set) => {
@@ -40,9 +41,16 @@ export const useTripStore = create<State & Action>((set) => {
     },
 
     /**
+     * Remove the current trip from the store
+     */
+    resetTrip() {
+      set({ trip: undefined });
+    },
+
+    /**
      * Reset store state
      */
-    reset: () => {
+    reset() {
       set(DEFAULT_STATE);
     },
   };
