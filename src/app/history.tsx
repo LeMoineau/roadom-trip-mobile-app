@@ -17,26 +17,35 @@ export default function HistoryPage() {
     <View
       style={{
         flex: 1,
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        paddingBottom: 50,
-        gap: 20,
       }}
     >
-      {archivedTrips ? (
-        archivedTrips.map((t, index) => (
-          <TripPreviewItem
-            key={index}
-            trip={t}
-            onPress={() => {
-              router.push({ pathname: "/trips/[id]", params: { id: t.id } });
-            }}
-          ></TripPreviewItem>
-        ))
-      ) : (
-        <NoArchivedTripsYetItem></NoArchivedTripsYetItem>
-      )}
-      <ScrollView></ScrollView>
+      <ScrollView
+        style={{
+          flex: 1,
+          paddingHorizontal: 20,
+          paddingTop: 20,
+          paddingBottom: 150,
+        }}
+      >
+        {archivedTrips ? (
+          archivedTrips.map((t, index) => (
+            <View key={index}>
+              <TripPreviewItem
+                trip={t}
+                onPress={() => {
+                  router.push({
+                    pathname: "/trips/[id]",
+                    params: { id: t.id },
+                  });
+                }}
+              ></TripPreviewItem>
+              <View style={{ height: 20 }}></View>
+            </View>
+          ))
+        ) : (
+          <NoArchivedTripsYetItem></NoArchivedTripsYetItem>
+        )}
+      </ScrollView>
     </View>
   );
 }

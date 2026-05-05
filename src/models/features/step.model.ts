@@ -41,6 +41,21 @@ export class Step {
     return "Indice";
   }
 
+  get available(): boolean {
+    return this.availableIn <= 0;
+  }
+
+  get availableIn(): number {
+    const now = new Date();
+    const nextStepDate =
+      typeof this.availableAt === "string"
+        ? new Date(this.availableAt)
+        : this.availableAt;
+    return Math.round(
+      (((nextStepDate.getTime() - now.getTime()) % 86400000) % 3600000) / 60000,
+    );
+  }
+
   toDto() {
     return this.dto;
   }

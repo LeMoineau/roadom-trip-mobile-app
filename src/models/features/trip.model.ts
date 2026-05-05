@@ -44,6 +44,19 @@ export class Trip {
     return;
   }
 
+  getNextStepDelay(): number | undefined {
+    const nextStep = this.getNextStep();
+    if (!!!nextStep) return;
+    const now = new Date();
+    const nextStepDate =
+      typeof nextStep.availableAt === "string"
+        ? new Date(nextStep.availableAt)
+        : nextStep.availableAt;
+    return Math.round(
+      (((nextStepDate.getTime() - now.getTime()) % 86400000) % 3600000) / 60000,
+    );
+  }
+
   getActualProximityNotification(): Step | undefined {
     for (let i = this.steps.length - 1; i >= 0; i--) {
       const step = this.steps[i];

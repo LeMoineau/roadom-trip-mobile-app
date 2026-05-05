@@ -1,48 +1,49 @@
 import { useEffect, useState } from "react";
 import { colors } from "../../../constants/style/colors";
 import { Trip } from "../../../models/features/trip.model";
+import NoMoreStepItem from "../../common/items/NoMoreStepItem";
 import TripStatusItem from "../../common/items/TripStatusItem";
 
 export default function NextStepDelayItem({ trip }: { trip: Trip }) {
   const [nextStepDelay, setNextStepDelay] = useState<number | undefined>(30);
-  const nextStepStatus = !!!nextStepDelay
-    ? "finish"
-    : nextStepDelay < 0
-      ? "available"
-      : "waiting";
 
   useEffect(() => {
-    const nextStep = trip.getNextStep();
-    if (!!!nextStep) {
-      setNextStepDelay(undefined);
-    } else {
-      const now = new Date();
-      const nextStepDate =
-        typeof nextStep.availableAt === "string"
-          ? new Date(nextStep.availableAt)
-          : nextStep.availableAt;
-      setNextStepDelay(
-        Math.round(
-          (((nextStepDate.getTime() - now.getTime()) % 86400000) % 3600000) /
-            60000,
-        ),
-      );
-    }
-  });
+    setNextStepDelay(trip.getNextStepDelay());
+    let intervalId = setInterval(() => {
+      setNextStepDelay(trip.getNextStepDelay());
+    }, 30000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [trip]);
 
   if (trip.status === "finish") {
     return;
   }
 
-  if (nextStepStatus === "finish") {
+  if (nextStepDelay === undefined) {
+    return <NoMoreStepItem></NoMoreStepItem>;
+  }
+
+  if (nextStepDelay <= 0) {
     return (
       <TripStatusItem
-        bgColor={colors.gray[50]}
-        borderColor={colors.gray[100]}
-        textColor={colors.gray[500]}
-        title="Plus de prochaine étape !"
-        desc="Vous avez épuisé tous les indices et challenges disponibles ! Bon courage pour trouver votre destination !"
+        bgColor={colors.green[50]}
+        borderColor={colors.green[100]}
+        textColor={colors.green[500]}
+        title="Nouvel indice disponible !"
+        icon="new-releases"
       ></TripStatusItem>
     );
   }
+
+  return (
+    <TripStatusItem
+      bgColor={colors.yellow[50]}
+      borderColor={colors.yellow[100]}
+      textColor={colors.yellow[500]}
+      title={`Prochain indice dans ${nextStepDelay}min`}
+      icon="clock-o"
+    ></TripStatusItem>
+  );
 }

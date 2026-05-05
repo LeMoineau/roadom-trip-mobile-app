@@ -1,8 +1,10 @@
-import { Tabs } from "expo-router";
+import { Tabs, useLocalSearchParams } from "expo-router";
 import ExpoIcon from "../../../../components/common/icons/ExpoIcon";
 import { colors } from "../../../../constants/style/colors";
 
 export default function TripPageLayout() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+
   return (
     <Tabs
       screenOptions={{
@@ -18,6 +20,9 @@ export default function TripPageLayout() {
     >
       <Tabs.Screen
         name="index"
+        initialParams={{
+          id,
+        }}
         options={{
           title: "Home",
           tabBarIcon: ({ focused, color }) => (
@@ -31,6 +36,9 @@ export default function TripPageLayout() {
       />
       <Tabs.Screen
         name="map"
+        initialParams={{
+          id,
+        }}
         options={{
           title: "Map",
           tabBarIcon: ({ focused, color }) => (
@@ -44,6 +52,9 @@ export default function TripPageLayout() {
       />
       <Tabs.Screen
         name="settings"
+        initialParams={{
+          id,
+        }}
         options={{
           title: "Settings",
           tabBarIcon: ({ focused, color }) => (

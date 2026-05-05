@@ -12,6 +12,7 @@ import useTripRepository from "../../../../hooks/features/trip/useTripRepository
 export default function TripSettingTab() {
   const { archiveTrip } = useArchivedTrips();
   const { showToast } = useContext(ToastContext);
+
   const { id } = useLocalSearchParams<{ id: string }>();
   const { trip } = useTripRepository({ id });
 
