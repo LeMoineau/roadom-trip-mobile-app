@@ -12,7 +12,6 @@ export default function TripPageLayout() {
         headerShown: false,
         tabBarPosition: "bottom",
         tabBarStyle: { height: 40 },
-        // tabBarIconStyle: { display: "none" },
         sceneStyle: { backgroundColor: colors.white },
         animation: "shift",
         tabBarShowLabel: false,

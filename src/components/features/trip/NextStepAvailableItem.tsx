@@ -1,6 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../../../constants/style/colors";
 import { Step } from "../../../models/features/step.model";
+import { DateUtils } from "../../../shared/utils/date.utils";
 import ExpoIcon from "../../common/icons/ExpoIcon";
 import Divider from "../../common/misc/Divider";
 
@@ -41,7 +42,7 @@ export function NextStepAvailableItem({
         </Text>
         {availableIn <= -1 && (
           <Text style={{ fontSize: 12, color: colors.white }}>
-            depuis {step.availableInHumanReadable}
+            depuis {DateUtils.diffHumanlyReadable(-1 * step.availableIn)}
           </Text>
         )}
       </View>

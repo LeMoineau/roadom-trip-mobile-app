@@ -3,6 +3,7 @@ import * as geolib from "geolib";
 import seaGeoMap from "@geo-maps/earth-seas-10m";
 import GeoJsonLookup from "geojson-geometries-lookup";
 import { GeoPoint } from "../models/GeoPoint.model";
+import { GeoPointDto } from "../types/dto/geo/GeoPoint.dto";
 
 // Loading the sea map
 const seaMap = new GeoJsonLookup(seaGeoMap);
@@ -106,5 +107,18 @@ export namespace GeoUtils {
       Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
     const brng = Math.atan2(y, x);
     return (toDegrees(brng) + 360) % 360;
+  }
+
+  /**
+   * Get the middle point between 2 points
+   * @param pt1
+   * @param pt2
+   * @returns
+   */
+  export function getMiddlePoint(pt1: GeoPoint, pt2: GeoPoint): GeoPoint {
+    return new GeoPoint({
+      lat: (pt1.lat + pt2.lat) / 2,
+      lon: (pt1.lon + pt2.lon) / 2,
+    });
   }
 }

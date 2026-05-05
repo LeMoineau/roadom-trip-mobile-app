@@ -35,13 +35,10 @@ export default function TripStatsRecapPage() {
           ></StatItem>
         </View>
         <View style={{ height: 10 }}></View>
-        {trip.endingAt && (
+        {trip.duration && (
           <StatItem
             label="Durée du Road-Trip"
-            value={DateUtils.diffHumanlyReadable(
-              new Date(trip.createdAt),
-              new Date(trip.endingAt),
-            )}
+            value={DateUtils.diffHumanlyReadable(trip.duration)}
             color={colors.gray}
           ></StatItem>
         )}

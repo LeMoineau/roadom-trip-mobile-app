@@ -56,12 +56,7 @@ export class Step {
   }
 
   get availableInHumanReadable(): string {
-    const now = new Date();
-    const nextStepDate =
-      typeof this.availableAt === "string"
-        ? new Date(this.availableAt)
-        : this.availableAt;
-    return DateUtils.diffHumanlyReadable(nextStepDate, now);
+    return DateUtils.diffHumanlyReadable(this.availableIn);
   }
 
   toDto() {

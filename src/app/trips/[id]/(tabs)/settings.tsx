@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useContext } from "react";
-import { ScrollView, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import OutlineButton from "../../../../components/common/buttons/OutlineButton";
 import ExpoIcon from "../../../../components/common/icons/ExpoIcon";
 import NoTripYetItem from "../../../../components/common/items/NoTripYetItem";
@@ -25,57 +25,92 @@ export default function TripSettingTab() {
   }
 
   const handleForceNextStep = () => {
-    if (
-      confirm(
-        "Etes-vous sûr de vouloir forcer le prochain indice de votre road-trip ?",
-      )
-    ) {
-      const nextStep = trip.getNextStep();
-      if (!!nextStep) {
-        nextStep.dto.reach = true;
-        updateTrip(trip);
-        router.push({ pathname: "/trips/[id]", params: { id: trip.id } });
-        showToast({
-          message: `Un nouvel indice a été révélé !`,
-          bgColor: colors.green[500],
-          duration: 3000,
-        });
-      }
-    }
+    Alert.alert(
+      "Forcer le prochain indice",
+      "Etes-vous sûr de vouloir forcer le prochain indice de votre road-trip ?",
+      [
+        {
+          text: "Non",
+          style: "cancel",
+        },
+        {
+          text: "Oui",
+          onPress: () => {
+            const nextStep = trip.getNextStep();
+            if (!!nextStep) {
+              nextStep.dto.reach = true;
+              updateTrip(trip);
+              router.push({ pathname: "/trips/[id]", params: { id: trip.id } });
+              showToast({
+                message: `Un nouvel indice a été révélé !`,
+                bgColor: colors.green[500],
+                duration: 3000,
+              });
+            }
+          },
+        },
+      ],
+    );
   };
 
   const handleAbandonTrip = () => {
-    if (confirm("Etes-vous sûr de vouloir donner votre langue au chat ?")) {
-      trip.abandon();
-      archiveTrip(trip);
-      showToast({
-        message: "Road-trip terminé et archivé !",
-        bgColor: colors.green[500],
-        duration: 3000,
-      });
-      router.dismissTo({
-        pathname: "/",
-      });
-      router.push({
-        pathname: "/trips/[id]/recap",
-        params: { id: trip.id },
-      });
-    }
+    Alert.alert(
+      "Donner votre langue au chat",
+      "Etes-vous sûr de vouloir donner votre langue au chat ?",
+      [
+        {
+          text: "Non",
+          style: "cancel",
+        },
+        {
+          text: "Oui",
+          onPress: () => {
+            trip.abandon();
+            archiveTrip(trip);
+            showToast({
+              message: "Road-trip terminé et archivé !",
+              bgColor: colors.green[500],
+              duration: 3000,
+            });
+            router.dismissTo({
+              pathname: "/",
+            });
+            router.push({
+              pathname: "/trips/[id]/recap",
+              params: { id: trip.id },
+            });
+          },
+        },
+      ],
+    );
   };
 
   const handleTerminateTrip = () => {
-    if (confirm("Etes-vous sûr de vouloir terminer ce road-trip ?")) {
-      trip.finish();
-      archiveTrip(trip);
-      showToast({
-        message: "Road-trip terminé et archivé !",
-        bgColor: colors.green[500],
-        duration: 3000,
-      });
-      router.dismissTo({
-        pathname: "/",
-      });
-    }
+    Alert.alert(
+      "Terminer le road-trip",
+      "Etes-vous sûr de vouloir terminer ce road-trip ?",
+      [
+        {
+          text: "Non",
+          style: "cancel",
+        },
+        {
+          text: "Oui",
+          onPress: () => {
+            trip.finish();
+            archiveTrip(trip);
+            showToast({
+              message: "Road-trip terminé et archivé !",
+              bgColor: colors.green[500],
+              duration: 3000,
+            });
+            router.dismissTo({
+              pathname: "/",
+            });
+          },
+        },
+      ],
+    );
   };
 
   const handleOpenRecap = () => {

@@ -20,7 +20,6 @@ export default function useArchivedTrips() {
     setArchivedTrips([
       ...trips.filter((t) => isTripDto(t)).map((t) => new Trip(t)),
     ]);
-    console.log("archived trips loaded");
   };
 
   const updateArchivedTrip = async (trips: Trip[]) => {

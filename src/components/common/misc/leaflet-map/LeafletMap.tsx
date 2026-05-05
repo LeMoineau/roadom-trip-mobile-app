@@ -33,7 +33,7 @@ export default function LeafletMap({
 
     const loadHtml = async () => {
       try {
-        const path = require("./../../../../assets/leaflet.html");
+        const path = require("./../../../../../assets/leaflet.html");
         const asset = Asset.fromModule(path);
         await asset.downloadAsync();
         const htmlContent = await new File(asset.localUri!).text();

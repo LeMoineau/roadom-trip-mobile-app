@@ -1,3 +1,4 @@
+import { Route, RouteStep } from "osrm";
 import { AllIconNames } from "../../components/common/icons/ExpoIcon";
 import { TripDto } from "../../shared/types/dto/trip/Trip.dto";
 import { DateUtils } from "../../shared/utils/date.utils";
@@ -38,6 +39,10 @@ export class Trip {
 
   get personAskingAvailable() {
     return this.dto.personAskingAvailable;
+  }
+
+  get route() {
+    return this.dto.route;
   }
 
   getNextStep(): Step | undefined {
@@ -83,6 +88,33 @@ export class Trip {
       default:
         return { label: "En cours", icon: "clock-o", color: "green" };
     }
+  }
+
+  getRoutePolyline() {
+    if (!!this.route) {
+      if (this.route.source === "osrm") {
+        const osrmRes = this.route.route as Route;
+        if (osrmRes.legs.length > 0) {
+          return osrmRes.legs[0].steps
+            .map((s: RouteStep) => {
+              if (typeof s.geometry !== "string") {
+                return [
+                  ...s.geometry.coordinates.map((coords) => coords.reverse()),
+                ];
+              }
+            })
+            .filter((s) => !!s);
+        }
+      }
+    }
+  }
+
+  get duration() {
+    if (!!!this.endingAt) return;
+    return DateUtils.diffInMinute(
+      new Date(this.endingAt),
+      new Date(this.createdAt),
+    );
   }
 
   finish() {
