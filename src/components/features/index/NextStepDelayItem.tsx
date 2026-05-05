@@ -17,7 +17,7 @@ export default function NextStepDelayItem({ trip }: { trip: Trip }) {
     };
   }, [trip]);
 
-  if (trip.status === "finish") {
+  if (["finish", "abandoned"].includes(trip.status)) {
     return;
   }
 

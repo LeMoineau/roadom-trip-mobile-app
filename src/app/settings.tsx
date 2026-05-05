@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, View } from "react-native";
 import { colors } from "../constants/style/colors";
 
-export default function newTripPage() {
+export default function SettingsPage() {
   const [_, setTheme] = useState("light");
 
   return (

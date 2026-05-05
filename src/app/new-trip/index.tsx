@@ -35,6 +35,7 @@ export default function NewTripPage() {
   useEffect(() => {
     if (!!beingCreatedTrip) {
       if (!!trip) {
+        trip.finish();
         archiveTrip(trip);
       }
       updateTrip(beingCreatedTrip);

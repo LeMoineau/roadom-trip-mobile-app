@@ -28,7 +28,7 @@ export default function HistoryPage() {
         }}
       >
         {archivedTrips ? (
-          archivedTrips.map((t, index) => (
+          archivedTrips.reverse().map((t, index) => (
             <View key={index}>
               <TripPreviewItem
                 trip={t}

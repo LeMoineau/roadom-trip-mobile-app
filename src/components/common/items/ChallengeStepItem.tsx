@@ -35,7 +35,7 @@ export default function ChallengeStepItem({
           }}
         >
           <TagItem
-            text={`${step.nbOfUses} Utilisation`}
+            text={`${step.nbOfUses === "infinite" ? "" : step.nbOfUses + " "}Utilisation${step.nbOfUses === "infinite" ? " Infini" : ""}`}
             bgColor={colors.amber[400]}
           ></TagItem>
           <TagItem

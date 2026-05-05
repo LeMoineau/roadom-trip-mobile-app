@@ -13,13 +13,10 @@ import { colors } from "../../../../constants/style/colors";
 import useTripRepository from "../../../../hooks/features/trip/useTripRepository";
 import { ArrayUtils } from "../../../../shared/utils/array.utils";
 import { DateUtils } from "../../../../shared/utils/date.utils";
-import { useTripStore } from "../../../../stores/features/trip/trip.store";
 
 export default function TripPage() {
-  const updateTrip = useTripStore((state) => state.updateTrip);
-
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { trip } = useTripRepository({ id });
+  const { trip, updateTrip } = useTripRepository({ id });
 
   if (!!!trip) {
     return (

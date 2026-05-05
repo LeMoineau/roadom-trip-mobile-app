@@ -1,6 +1,7 @@
 import { stepsNames } from "../../constants/features/steps-name";
 import { ProximityNotificationDto } from "../../shared/types/dto/notifications/ProximityNotification.dto";
 import { StepDto } from "../../shared/types/dto/Step.dto";
+import { DateUtils } from "../../shared/utils/date.utils";
 
 export class Step {
   dto: StepDto;
@@ -51,21 +52,16 @@ export class Step {
       typeof this.availableAt === "string"
         ? new Date(this.availableAt)
         : this.availableAt;
-    return Math.round(
-      ((nextStepDate.getTime() - now.getTime()) % 86400000) / 60000,
-    );
+    return DateUtils.diffInMinute(nextStepDate, now);
   }
 
   get availableInHumanReadable(): string {
-    const minutes = this.availableIn;
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-
-    if (hours > 0) {
-      return `${hours}h ${remainingMinutes}min`;
-    } else {
-      return `${remainingMinutes}min`;
-    }
+    const now = new Date();
+    const nextStepDate =
+      typeof this.availableAt === "string"
+        ? new Date(this.availableAt)
+        : this.availableAt;
+    return DateUtils.diffHumanlyReadable(nextStepDate, now);
   }
 
   toDto() {

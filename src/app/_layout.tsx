@@ -66,6 +66,10 @@ export default function RootLayout() {
             name="trips/[id]/steps/[index]"
             options={{ headerTitle: "Informations étape" }}
           />
+          <Stack.Screen
+            name="trips/[id]/recap/(tabs)"
+            options={{ headerTitle: "Récapitulatif du Road-Trip" }}
+          />
         </Stack>
       </ToastProvider>
     </SafeAreaView>

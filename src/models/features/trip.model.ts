@@ -1,5 +1,6 @@
 import { AllIconNames } from "../../components/common/icons/ExpoIcon";
 import { TripDto } from "../../shared/types/dto/trip/Trip.dto";
+import { DateUtils } from "../../shared/utils/date.utils";
 import { Step } from "./step.model";
 
 export class Trip {
@@ -27,6 +28,10 @@ export class Trip {
     return this.dto.createdAt;
   }
 
+  get endingAt() {
+    return this.dto.endingAt;
+  }
+
   get status() {
     return this.dto.status;
   }
@@ -52,9 +57,7 @@ export class Trip {
       typeof nextStep.availableAt === "string"
         ? new Date(nextStep.availableAt)
         : nextStep.availableAt;
-    return Math.round(
-      ((nextStepDate.getTime() - now.getTime()) % 86400000) / 60000,
-    );
+    return DateUtils.diffInMinute(nextStepDate, now);
   }
 
   getActualProximityNotification(): Step | undefined {
@@ -82,8 +85,14 @@ export class Trip {
     }
   }
 
-  archive() {
+  finish() {
     this.dto.status = "finish";
+    this.dto.endingAt = new Date().toString();
+  }
+
+  abandon() {
+    this.dto.status = "abandoned";
+    this.dto.endingAt = new Date().toString();
   }
 
   toDto() {

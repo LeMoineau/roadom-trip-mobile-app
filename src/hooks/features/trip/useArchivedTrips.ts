@@ -23,9 +23,13 @@ export default function useArchivedTrips() {
     console.log("archived trips loaded");
   };
 
+  const updateArchivedTrip = async (trips: Trip[]) => {
+    saveJson(storageKeys.ARCHIVED_TRIPS, [...trips.map((t) => t.toDto())]);
+    setArchivedTrips(trips);
+  };
+
   const archiveTrip = (trip: Trip) => {
     console.log(trip.id + " archived");
-    trip.archive();
     saveJson(storageKeys.ARCHIVED_TRIPS, [
       ...(archivedTrips?.map((t) => t.toDto()) ?? []),
       trip.toDto(),
@@ -34,5 +38,5 @@ export default function useArchivedTrips() {
     resetTrip();
   };
 
-  return { archivedTrips, loadArchivedTrips, archiveTrip };
+  return { archivedTrips, loadArchivedTrips, archiveTrip, updateArchivedTrip };
 }

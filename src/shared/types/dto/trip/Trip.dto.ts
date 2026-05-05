@@ -14,6 +14,8 @@ export interface TripDto {
   osmEndingDetails?: OSMResponse;
   status: TripStatus;
   personAskingAvailable?: number;
+  personAsked?: number;
+  endingAt?: DateString;
 }
 
 export function isTripDto(trip: any): trip is TripDto {
