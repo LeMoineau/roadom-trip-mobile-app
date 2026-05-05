@@ -41,7 +41,7 @@ export function NextStepAvailableItem({
         </Text>
         {availableIn <= -1 && (
           <Text style={{ fontSize: 12, color: colors.white }}>
-            depuis {-1 * availableIn}min
+            depuis {step.availableInHumanReadable}
           </Text>
         )}
       </View>

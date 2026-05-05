@@ -8,10 +8,12 @@ import { colors } from "../../../../constants/style/colors";
 import { ToastContext } from "../../../../contexts/contexts";
 import useArchivedTrips from "../../../../hooks/features/trip/useArchivedTrips";
 import useTripRepository from "../../../../hooks/features/trip/useTripRepository";
+import { useTripStore } from "../../../../stores/features/trip/trip.store";
 
 export default function TripSettingTab() {
   const { archiveTrip } = useArchivedTrips();
   const { showToast } = useContext(ToastContext);
+  const updateTrip = useTripStore((state) => state.updateTrip);
 
   const { id } = useLocalSearchParams<{ id: string }>();
   const { trip } = useTripRepository({ id });
@@ -23,6 +25,26 @@ export default function TripSettingTab() {
       </View>
     );
   }
+
+  const handleForceNextStep = () => {
+    if (
+      confirm(
+        "Etes-vous sûr de vouloir forcer le prochain indice de votre road-trip ?",
+      )
+    ) {
+      const nextStep = trip.getNextStep();
+      if (!!nextStep) {
+        nextStep.dto.reach = true;
+        updateTrip(trip);
+        router.push({ pathname: "/trips/[id]", params: { id: trip.id } });
+        showToast({
+          message: `Un nouvel indice a été révélé !`,
+          bgColor: colors.green[500],
+          duration: 3000,
+        });
+      }
+    }
+  };
 
   const handleTerminateTrip = () => {
     if (confirm("Etes-vous sûr de vouloir terminer ce road-trip ?")) {
@@ -45,6 +67,7 @@ export default function TripSettingTab() {
           <OutlineButton
             content="Forcer le prochain indice"
             prependIcon={<ExpoIcon name="play-forward" size={20}></ExpoIcon>}
+            onPress={handleForceNextStep}
           ></OutlineButton>
           <OutlineButton
             content="Donner sa langue au chat"

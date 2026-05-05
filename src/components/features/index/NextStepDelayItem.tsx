@@ -42,7 +42,7 @@ export default function NextStepDelayItem({ trip }: { trip: Trip }) {
       bgColor={colors.yellow[50]}
       borderColor={colors.yellow[100]}
       textColor={colors.yellow[500]}
-      title={`Prochain indice dans ${nextStepDelay}min`}
+      title={`Prochain indice dans ${trip.getNextStep()?.availableInHumanReadable}`}
       icon="clock-o"
     ></TripStatusItem>
   );

@@ -50,7 +50,7 @@ export function NextStepNotAvailableItem({
           <Text
             style={{ fontSize: 12, color: colors.yellow[500], fontWeight: 500 }}
           >
-            dans {availableIn}min
+            dans {step.availableInHumanReadable}
           </Text>
         )}
       </View>

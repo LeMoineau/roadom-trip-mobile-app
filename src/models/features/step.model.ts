@@ -52,8 +52,20 @@ export class Step {
         ? new Date(this.availableAt)
         : this.availableAt;
     return Math.round(
-      (((nextStepDate.getTime() - now.getTime()) % 86400000) % 3600000) / 60000,
+      ((nextStepDate.getTime() - now.getTime()) % 86400000) / 60000,
     );
+  }
+
+  get availableInHumanReadable(): string {
+    const minutes = this.availableIn;
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    if (hours > 0) {
+      return `${hours}h ${remainingMinutes}min`;
+    } else {
+      return `${remainingMinutes}min`;
+    }
   }
 
   toDto() {

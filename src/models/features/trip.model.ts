@@ -35,7 +35,7 @@ export class Trip {
     return this.dto.personAskingAvailable;
   }
 
-  getNextStep(options?: {}): Step | undefined {
+  getNextStep(): Step | undefined {
     for (let step of this.steps) {
       if (!!!step.reach) {
         return step;
@@ -53,7 +53,7 @@ export class Trip {
         ? new Date(nextStep.availableAt)
         : nextStep.availableAt;
     return Math.round(
-      (((nextStepDate.getTime() - now.getTime()) % 86400000) % 3600000) / 60000,
+      ((nextStepDate.getTime() - now.getTime()) % 86400000) / 60000,
     );
   }
 
