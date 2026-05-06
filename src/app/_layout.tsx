@@ -5,7 +5,40 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../constants/style/colors";
 import ToastProvider from "../contexts/ToastProvider";
 
+// const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
+
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldPlaySound: false,
+//     shouldSetBadge: false,
+//     shouldShowBanner: true,
+//     shouldShowList: true,
+//   }),
+// });
+
 export default function RootLayout() {
+  // const { expoPushToken, shortExpoPushToken, sendPushNotification } =
+  //   useNotifications();
+
+  // TaskManager.defineTask<Notifications.NotificationTaskPayload>(
+  //   BACKGROUND_NOTIFICATION_TASK,
+  //   async ({ data }) => {
+  //     console.log(data);
+  //     if (
+  //       !("actionIdentifier" in data) && //n'est pas une notification de réponse
+  //       data.data.body &&
+  //       typeof data.data.body === "string"
+  //     ) {
+  //     }
+  //   },
+  // );
+
+  // Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
+
+  // useEffect(() => {
+  //   console.log("token", expoPushToken);
+  // }, []);
+
   return (
     <SafeAreaView
       edges={{ top: "off", bottom: "additive" }}

@@ -1,5 +1,5 @@
 import { ComplimentChallengeDto } from "../../../../shared/types/dto/challenges/ComplimentChallenge.dto";
-import ChallengeStepItem from "../../../common/items/ChallengeStepItem";
+import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function ComplimentChallenge({
   step,

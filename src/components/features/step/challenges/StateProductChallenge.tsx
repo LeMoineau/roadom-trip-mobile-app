@@ -1,5 +1,5 @@
 import { StateProductChallengeDto } from "../../../../shared/types/dto/challenges/StateProductChallenge.dto";
-import ChallengeStepItem from "../../../common/items/ChallengeStepItem";
+import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function StateProductChallenge({
   step,

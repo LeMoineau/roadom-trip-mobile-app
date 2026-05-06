@@ -1,5 +1,5 @@
 import { PotatoeChallengeDto } from "../../../../shared/types/dto/challenges/PotatoeChallenge.dto";
-import ChallengeStepItem from "../../../common/items/ChallengeStepItem";
+import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function PotatoeChallenge({
   step,

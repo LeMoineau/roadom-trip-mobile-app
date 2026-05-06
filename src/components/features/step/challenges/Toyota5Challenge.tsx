@@ -1,5 +1,5 @@
 import { Toyota5ChallengeDto } from "../../../../shared/types/dto/challenges/Toyota5Challenge.dto";
-import ChallengeStepItem from "../../../common/items/ChallengeStepItem";
+import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function Toyota5Challenge({
   step,

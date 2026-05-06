@@ -1,6 +1,6 @@
 import { Text } from "react-native";
 import { AttractionChallengeDto } from "../../../../shared/types/dto/challenges/AttractionChallenge.dto";
-import ChallengeStepItem from "../../../common/items/ChallengeStepItem";
+import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function AttractionChallenge({
   step,

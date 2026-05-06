@@ -1,11 +1,12 @@
 import { Image, TouchableOpacity } from "react-native";
 import { NoseChallengeDto } from "../../../../shared/types/dto/challenges/NoseChallenge.dto";
-import ChallengeStepItem from "../../../common/items/ChallengeStepItem";
+import ChallengeStepItem from "../ChallengeStepItem";
 
 const HAT_URL =
   "https://png.pngtree.com/png-vector/20230120/ourmid/pngtree-straw-hat-cartoon-illustration-png-image_6562738.png";
 
-const NOSE_URL = "https://pngimg.com/d/nose_PNG14.png";
+const NOSE_URL =
+  "https://png.pngtree.com/png-clipart/20240507/ourmid/pngtree-nose-illustration-hand-drawn-clipart-png-image_12368109.png";
 
 export default function NoseChallenge({ step }: { step: NoseChallengeDto }) {
   return (

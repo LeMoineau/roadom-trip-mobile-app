@@ -1,5 +1,5 @@
 import { ChangeWheelChallengeDto } from "../../../../shared/types/dto/challenges/ChangeWheelChallenge.dto";
-import ChallengeStepItem from "../../../common/items/ChallengeStepItem";
+import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function ChangeWheelChallenge({
   step,

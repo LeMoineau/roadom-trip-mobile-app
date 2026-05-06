@@ -10,6 +10,10 @@ export class Step {
     this.dto = dto;
   }
 
+  get id() {
+    return this.dto.id;
+  }
+
   get reach() {
     return this.dto.reach;
   }
