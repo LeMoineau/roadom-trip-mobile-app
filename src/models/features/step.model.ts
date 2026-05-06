@@ -94,6 +94,10 @@ export class Step {
     this.dto.availableAt = val;
   }
 
+  reached() {
+    this.reach = true;
+  }
+
   toDto() {
     return this.dto;
   }

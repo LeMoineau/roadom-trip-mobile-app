@@ -42,6 +42,26 @@ export default function TripPage() {
     <View style={{ flex: 1 }}>
       <ScrollView>
         <View style={{ flex: 1, padding: 20, gap: 20 }}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <Text style={{ fontWeight: "600", fontSize: 20 }}>{step.name}</Text>
+            {step instanceof Challenge && !!step.used && (
+              <TagItem
+                text={`Terminé`}
+                textColor={colors.green[500]}
+                style={{ borderColor: colors.green[200], borderWidth: 1 }}
+                bgColor={colors.green[100]}
+                iconName="done"
+              ></TagItem>
+            )}
+          </View>
+          <Divider style={{ marginBottom: 0 }}></Divider>
           <DescriptionSection
             items={[
               {
@@ -84,26 +104,7 @@ export default function TripPage() {
               ),
             ]}
           ></DescriptionSection>
-          <Divider style={{ marginBottom: 0 }}></Divider>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 10,
-            }}
-          >
-            <Text style={{ fontWeight: "600", fontSize: 20 }}>{step.name}</Text>
-            {step instanceof Challenge && !!step.used && (
-              <TagItem
-                text={`Terminé`}
-                textColor={colors.green[500]}
-                style={{ borderColor: colors.green[200], borderWidth: 1 }}
-                bgColor={colors.green[100]}
-                iconName="done"
-              ></TagItem>
-            )}
-          </View>
+          <Divider></Divider>
           <StepMatcher step={step}></StepMatcher>
           <View style={{ height: 150 }}></View>
         </View>

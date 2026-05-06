@@ -16,7 +16,7 @@ export default function TripStatsRecapPage() {
 
   //TODO: ne colorer que les plus gros nombres
 
-  //TODO: idées stats: - challenge le plus utilisés - le challenge finit le plus vite - nb total de demande d'aide à des personnes
+  //TODO: idées stats: - challenge le plus utilisés - le challenge finit le plus vite
 
   return (
     <View style={{ flex: 1 }}>

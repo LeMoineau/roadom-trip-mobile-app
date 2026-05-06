@@ -8,11 +8,11 @@ import { Step } from "./step.model";
 
 export class Trip {
   dto: TripDto;
-  steps: Step[];
+  _steps: Step[];
 
   constructor(dto: TripDto) {
     this.dto = dto;
-    this.steps = dto.steps.map((s) =>
+    this._steps = dto.steps.map((s) =>
       s.type.includes("challenge")
         ? new Challenge(s as ChallengeDto, this)
         : new Step(s, this),
@@ -33,6 +33,10 @@ export class Trip {
 
   get createdAt() {
     return this.dto.createdAt;
+  }
+
+  get startingAt() {
+    return this.dto.startingAt;
   }
 
   get endingAt() {
@@ -59,7 +63,7 @@ export class Trip {
     if (!!!this.endingAt) return;
     return DateUtils.diffInMinute(
       new Date(this.endingAt),
-      new Date(this.createdAt),
+      new Date(this.startingAt ?? this.createdAt),
     );
   }
 
@@ -72,7 +76,20 @@ export class Trip {
   }
 
   set totalPersonAsked(val: number) {
-    this.totalPersonAsked = val;
+    this.dto.totalPersonAsked = val;
+  }
+
+  get steps() {
+    return this._steps;
+  }
+
+  set steps(ss: Step[]) {
+    this._steps = ss;
+    this.dto.steps = ss.map((s) => s.toDto());
+  }
+
+  get nbStepsReached() {
+    return this.steps.filter((s) => !!s.reach).length;
   }
 
   getNextStep(): Step | undefined {
@@ -110,7 +127,7 @@ export class Trip {
       case "new":
         return { label: "Nouveau", icon: "new-releases", color: "blue" };
       case "ongoing":
-        return { label: "En cours", icon: "clock-o", color: "green" };
+        return { label: "En cours", icon: "clock-o", color: "yellow" };
       case "finish":
         return { label: "Terminé", icon: "done", color: "green" };
       case "abandoned":
@@ -137,6 +154,11 @@ export class Trip {
         }
       }
     }
+  }
+
+  start() {
+    this.dto.status = "ongoing";
+    this.dto.startingAt = new Date().toString();
   }
 
   finish() {

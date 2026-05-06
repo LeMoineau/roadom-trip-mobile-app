@@ -102,6 +102,7 @@ export default function LocationSelectorPage() {
           paddingTop: 20,
           borderBottomWidth: 1,
           borderBottomColor: colors.gray[300],
+          zIndex: 100,
         }}
       >
         <TextInput

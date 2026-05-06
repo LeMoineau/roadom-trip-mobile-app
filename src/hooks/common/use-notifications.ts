@@ -81,7 +81,7 @@ export default function useNotifications() {
             projectId,
           })
         ).data;
-        console.log(token);
+        console.log("token ici", token);
       } catch (e) {
         token = `${e}`;
       }

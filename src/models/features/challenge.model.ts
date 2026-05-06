@@ -1,7 +1,6 @@
 import { AllIconNames } from "../../components/common/icons/ExpoIcon";
 import { ChallengeDto } from "../../shared/types/dto/challenges/Challenge.dto";
 import { Reward } from "../../shared/types/dto/rewards/Reward";
-import { StepDto } from "../../shared/types/dto/Step.dto";
 import { Step } from "./step.model";
 import { Trip } from "./trip.model";
 
@@ -109,6 +108,10 @@ export class Challenge extends Step {
     return this.dto.timeUsed;
   }
 
+  get finishDate(): Date | undefined {
+    return this.dto.finishDate ? new Date(this.dto.finishDate) : undefined;
+  }
+
   set finishDate(val: Date) {
     this.dto.finishDate = val.toString();
   }
@@ -130,13 +133,12 @@ export class Challenge extends Step {
       this.trip.addPersonAvailable(99999);
     } else if (this.reward === "allow-gps-5s") {
       this.trip.allow5sGps = true;
-    } else if (!!this.reward?.type && !!this.reward.type.includes("hint")) {
-      const newStep = new Step(this.reward as StepDto, this.trip);
-      newStep.reach = true;
-      newStep.availableAt = new Date();
+    } else if (!!this.reward?.type && !!this.rewardedStep) {
+      this.rewardedStep.reach = true;
+      this.rewardedStep.availableAt = new Date();
       const tmp = [...this.trip.steps];
       const index = tmp.findIndex((s) => !!!s.reach);
-      tmp.splice(index - 1, 0, newStep);
+      tmp.splice(index, 0, this.rewardedStep);
       this.trip.steps = tmp;
     }
     this.addTimeUsed(1);

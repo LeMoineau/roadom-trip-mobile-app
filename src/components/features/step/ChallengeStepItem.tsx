@@ -8,7 +8,6 @@ import useTripRepository from "../../../hooks/features/trip/useTripRepository";
 import { Challenge } from "../../../models/features/challenge.model";
 import OutlineButton from "../../common/buttons/OutlineButton";
 import ExpoIcon from "../../common/icons/ExpoIcon";
-import Divider from "../../common/misc/Divider";
 import StepImage from "./StepImage";
 
 export default function ChallengeStepItem({
@@ -87,7 +86,6 @@ export default function ChallengeStepItem({
     );
   };
 
-  // TODO: verif que les update se font bien à la récupération des récompenses
   return (
     <View style={{ gap: 10 }}>
       <View
@@ -115,7 +113,6 @@ export default function ChallengeStepItem({
           onPressDelete={handleDeleteImage}
         ></StepImage>
       ))}
-      <Divider style={{ width: "100%", marginVertical: 20 }}></Divider>
       <OutlineButton
         content="Prendre une photo"
         prependIcon={<ExpoIcon name="camera" size={23}></ExpoIcon>}

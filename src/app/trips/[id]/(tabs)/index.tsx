@@ -38,10 +38,25 @@ export default function TripPage() {
                 icon,
                 color,
               })),
-              {
-                label: "Date de début",
-                value: DateUtils.toHHmmDDMMYY(new Date(trip.createdAt)),
-              },
+              ...ArrayUtils.itemOrVoid(
+                (!!!trip.startingAt ||
+                  ["finish", "abandoned"].includes(trip.status)) && {
+                  label: "Création",
+                  value: DateUtils.toHHmmDDMMYY(new Date(trip.createdAt)),
+                },
+              ),
+              ...ArrayUtils.itemOrVoid(
+                !!trip.startingAt && {
+                  label: "Début",
+                  value: DateUtils.toHHmmDDMMYY(new Date(trip.startingAt)),
+                },
+              ),
+              ...ArrayUtils.itemOrVoid(
+                !!trip.endingAt && {
+                  label: "Fin",
+                  value: DateUtils.toHHmmDDMMYY(new Date(trip.endingAt)),
+                },
+              ),
               ...ArrayUtils.itemOrVoid(
                 !!trip.personAskingAvailable && {
                   label: "Aide disponible",
@@ -100,7 +115,10 @@ export default function TripPage() {
                     <NextStepItem
                       step={trip.getNextStep()!}
                       onOpenNextStep={(step) => {
-                        step.dto.reach = true;
+                        if (trip.nbStepsReached <= 0) {
+                          trip.start();
+                        }
+                        step.reached();
                         updateTrip(trip);
                       }}
                     ></NextStepItem>

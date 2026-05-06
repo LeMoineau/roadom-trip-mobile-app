@@ -70,7 +70,8 @@ export default function TripSettingTab() {
             updateTrip(trip);
             showToast({
               message: "Une Aide vous a bien été retirée",
-              bgColor: colors.yellow[200],
+              bgColor: colors.yellow[50],
+              textColor: colors.yellow[500],
               duration: 3000,
             });
           },
@@ -160,11 +161,9 @@ export default function TripSettingTab() {
           {!!trip.personAskingAvailable && trip.personAskingAvailable > 0 && (
             <OutlineButton
               content="Retirer 1 Aide"
-              style={{
-                backgroundColor: colors.blue[50],
-                borderColor: colors.blue[200],
-              }}
-              prependIcon={<ExpoIcon name="open-outline" size={20}></ExpoIcon>}
+              prependIcon={
+                <ExpoIcon name="person-remove-alt-1" size={20}></ExpoIcon>
+              }
               onPress={handleRemovePersonAsking}
             ></OutlineButton>
           )}
