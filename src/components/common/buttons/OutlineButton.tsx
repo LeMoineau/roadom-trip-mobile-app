@@ -17,6 +17,7 @@ export default function OutlineButton({
   style,
   textContainerStyle,
   textStyle,
+  activeOpacity,
 }: {
   content?: string;
   prependIcon?: React.ReactNode;
@@ -25,6 +26,7 @@ export default function OutlineButton({
   style?: StyleProp<ViewStyle>;
   textContainerStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  activeOpacity?: number;
 }) {
   return (
     <TouchableOpacity
@@ -42,6 +44,7 @@ export default function OutlineButton({
         style,
       ]}
       onPress={onPress}
+      activeOpacity={activeOpacity}
     >
       <View
         style={[

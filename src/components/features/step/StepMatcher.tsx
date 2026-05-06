@@ -1,14 +1,5 @@
+import { Challenge } from "../../../models/features/challenge.model";
 import { Step } from "../../../models/features/step.model";
-import { AttractionChallengeDto } from "../../../shared/types/dto/challenges/AttractionChallenge.dto";
-import { BlueCar5ChallengeDto } from "../../../shared/types/dto/challenges/BlueCar5Challenge.dto";
-import { ChangeWheelChallengeDto } from "../../../shared/types/dto/challenges/ChangeWheelChallenge.dto";
-import { ComplimentChallengeDto } from "../../../shared/types/dto/challenges/ComplimentChallenge.dto";
-import { FuelStopChallengeDto } from "../../../shared/types/dto/challenges/FuelStopChallenge.dto";
-import { NoseChallengeDto } from "../../../shared/types/dto/challenges/NoseChallenge.dto";
-import { PotatoeChallengeDto } from "../../../shared/types/dto/challenges/PotatoeChallenge.dto";
-import { PushCarChallengeDto } from "../../../shared/types/dto/challenges/PushCarChallenge.dto";
-import { StateProductChallengeDto } from "../../../shared/types/dto/challenges/StateProductChallenge.dto";
-import { Toyota5ChallengeDto } from "../../../shared/types/dto/challenges/Toyota5Challenge.dto";
 import { CelebrityHintDto } from "../../../shared/types/dto/hints/CelebrityHint.dto";
 import { CityPopulationHintDto } from "../../../shared/types/dto/hints/CityPopulationHint.dto";
 import { CompassDirectionHintDto } from "../../../shared/types/dto/hints/CompassDirectionHint.dto";
@@ -115,60 +106,48 @@ export default function StepMatcher({ step }: { step: Step }) {
     case "attraction-challenge":
       return (
         <AttractionChallenge
-          step={step.toDto() as AttractionChallengeDto}
+          challenge={step as Challenge}
         ></AttractionChallenge>
       );
     case "5-blue-car-challenge":
       return (
-        <BlueCar5Challenge
-          step={step.toDto() as BlueCar5ChallengeDto}
-        ></BlueCar5Challenge>
+        <BlueCar5Challenge challenge={step as Challenge}></BlueCar5Challenge>
       );
     case "change-wheel-challenge":
       return (
         <ChangeWheelChallenge
-          step={step.toDto() as ChangeWheelChallengeDto}
+          challenge={step as Challenge}
         ></ChangeWheelChallenge>
       );
     case "compliment-challenge":
       return (
         <ComplimentChallenge
-          step={step.toDto() as ComplimentChallengeDto}
+          challenge={step as Challenge}
         ></ComplimentChallenge>
       );
     case "fuel-stop-challenge":
       return (
-        <FuelStopChallenge
-          step={step.toDto() as FuelStopChallengeDto}
-        ></FuelStopChallenge>
+        <FuelStopChallenge challenge={step as Challenge}></FuelStopChallenge>
       );
     case "nose-challenge":
-      return (
-        <NoseChallenge step={step.toDto() as NoseChallengeDto}></NoseChallenge>
-      );
+      return <NoseChallenge challenge={step as Challenge}></NoseChallenge>;
     case "potatoe-challenge":
       return (
-        <PotatoeChallenge
-          step={step.toDto() as PotatoeChallengeDto}
-        ></PotatoeChallenge>
+        <PotatoeChallenge challenge={step as Challenge}></PotatoeChallenge>
       );
     case "push-car-challenge":
       return (
-        <PushCarChallenge
-          step={step.toDto() as PushCarChallengeDto}
-        ></PushCarChallenge>
+        <PushCarChallenge challenge={step as Challenge}></PushCarChallenge>
       );
     case "state-product-challenge":
       return (
         <StateProductChallenge
-          step={step.toDto() as StateProductChallengeDto}
+          challenge={step as Challenge}
         ></StateProductChallenge>
       );
     case "5-toyota-challenge":
       return (
-        <Toyota5Challenge
-          step={step.toDto() as Toyota5ChallengeDto}
-        ></Toyota5Challenge>
+        <Toyota5Challenge challenge={step as Challenge}></Toyota5Challenge>
       );
     default:
       return <></>;

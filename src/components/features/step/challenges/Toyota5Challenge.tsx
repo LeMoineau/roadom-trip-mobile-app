@@ -1,10 +1,10 @@
-import { Toyota5ChallengeDto } from "../../../../shared/types/dto/challenges/Toyota5Challenge.dto";
+import { Challenge } from "../../../../models/features/challenge.model";
 import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function Toyota5Challenge({
-  step,
+  challenge,
 }: {
-  step: Toyota5ChallengeDto;
+  challenge: Challenge;
 }) {
-  return <ChallengeStepItem step={step}></ChallengeStepItem>;
+  return <ChallengeStepItem challenge={challenge}></ChallengeStepItem>;
 }

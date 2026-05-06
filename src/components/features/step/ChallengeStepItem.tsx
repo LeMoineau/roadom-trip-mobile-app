@@ -1,38 +1,41 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Alert, Text, View } from "react-native";
 import { colors } from "../../../constants/style/colors";
+import { ToastContext } from "../../../contexts/contexts";
 import useFileSystem from "../../../hooks/common/use-file-system";
 import useImagePicker from "../../../hooks/common/use-image-picker";
-import { ChallengeDto } from "../../../shared/types/dto/challenges/Challenge.dto";
+import useTripRepository from "../../../hooks/features/trip/useTripRepository";
+import { Challenge } from "../../../models/features/challenge.model";
 import OutlineButton from "../../common/buttons/OutlineButton";
 import ExpoIcon from "../../common/icons/ExpoIcon";
-import TagItem from "../../common/items/TagItem";
 import Divider from "../../common/misc/Divider";
 import StepImage from "./StepImage";
 
 export default function ChallengeStepItem({
-  step,
+  challenge,
   children,
 }: {
-  step: ChallengeDto;
+  challenge: Challenge;
   children?: React.ReactNode;
 }) {
   const { images, setImages, pickImages, takePhoto, removeImage } =
     useImagePicker();
   const { fileExist, saveFileLocally, deleteFile, listFiles } = useFileSystem();
+  const { updateTrip } = useTripRepository({});
+  const { showToast } = useContext(ToastContext);
 
   useEffect(() => {
-    const images = listFiles(`/steps/${step.id}/images/`);
+    const images = listFiles(`/steps/${challenge.id}/images/`);
     setImages(images);
   }, []);
 
   useEffect(() => {
     for (let uri of images) {
       const imageName = uri.split("/").pop();
-      if (!fileExist(`/steps/${step.id}/images/${imageName}`)) {
+      if (!fileExist(`/steps/${challenge.id}/images/${imageName}`)) {
         saveFileLocally({
           currentUri: uri,
-          destinationUri: `/steps/${step.id}/images/`,
+          destinationUri: `/steps/${challenge.id}/images/`,
         });
       }
     }
@@ -51,7 +54,7 @@ export default function ChallengeStepItem({
           text: "Oui",
           onPress: () => {
             const imageName = uri.split("/").pop();
-            deleteFile(`/steps/${step.id}/images/${imageName}`);
+            deleteFile(`/steps/${challenge.id}/images/${imageName}`);
             removeImage(uri);
           },
         },
@@ -59,7 +62,32 @@ export default function ChallengeStepItem({
     );
   };
 
-  //TODO: update tags nb of use et recompenses
+  const handleEarnChallengeReward = () => {
+    Alert.alert(
+      "Récupérer la récompense",
+      "Etes-vous sûr de d'avoir bien complété le challenge ?",
+      [
+        {
+          text: "Non",
+          style: "cancel",
+        },
+        {
+          text: "Oui",
+          onPress: () => {
+            challenge.earnReward();
+            updateTrip(challenge.trip);
+            showToast({
+              message: challenge.earningRewardMessage,
+              bgColor: colors.green[500],
+              duration: 3000,
+            });
+          },
+        },
+      ],
+    );
+  };
+
+  // TODO: verif que les update se font bien à la récupération des récompenses
   return (
     <View style={{ gap: 10 }}>
       <View
@@ -69,36 +97,17 @@ export default function ChallengeStepItem({
           flexDirection: "column",
           alignItems: "center",
           gap: 10,
+          marginBottom: 10,
         }}
       >
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            width: "100%",
-            gap: 10,
-            flexWrap: "wrap",
-          }}
-        >
-          <TagItem
-            text={`${step.nbOfUses === "infinite" ? "" : step.nbOfUses + " "}Utilisation${step.nbOfUses === "infinite" ? " Infini" : ""}`}
-            bgColor={colors.amber[400]}
-          ></TagItem>
-          <TagItem
-            text={`Récompense :`}
-            bgColor={colors.green[500]}
-            iconName="person"
-          ></TagItem>
-        </View>
-        <Text style={{ fontSize: 17 }}>{step.message}</Text>
-        {step.minPhotos !== undefined && (
+        <Text style={{ fontSize: 17 }}>{challenge.message}</Text>
+        {challenge.minPhotos !== undefined && (
           <Text style={{ fontSize: 12 }}>
-            nombre de photos minimum: {step.minPhotos}
+            nombre de photos minimum: {challenge.minPhotos}
           </Text>
         )}
         {children}
       </View>
-      <Divider style={{ width: "100%", marginVertical: 20 }}></Divider>
       {images.map((uri, index) => (
         <StepImage
           uri={uri}
@@ -106,20 +115,36 @@ export default function ChallengeStepItem({
           onPressDelete={handleDeleteImage}
         ></StepImage>
       ))}
+      <Divider style={{ width: "100%", marginVertical: 20 }}></Divider>
       <OutlineButton
         content="Prendre une photo"
         prependIcon={<ExpoIcon name="camera" size={23}></ExpoIcon>}
-        onPress={() => {
-          takePhoto();
-        }}
+        onPress={takePhoto}
       ></OutlineButton>
       <OutlineButton
         content="Ajouter une photo"
         prependIcon={<ExpoIcon name="picture-o" size={20}></ExpoIcon>}
-        onPress={() => {
-          pickImages();
-        }}
+        onPress={pickImages}
       ></OutlineButton>
+      {!!!challenge.used && (
+        <OutlineButton
+          style={{
+            backgroundColor: colors.primary,
+            borderColor: colors.blue[400],
+          }}
+          textStyle={{ color: colors.white }}
+          content="Récupérer la récompense"
+          prependIcon={
+            <ExpoIcon
+              name="done"
+              size={20}
+              style={{ color: colors.white }}
+            ></ExpoIcon>
+          }
+          onPress={handleEarnChallengeReward}
+          activeOpacity={0.8}
+        ></OutlineButton>
+      )}
     </View>
   );
 }

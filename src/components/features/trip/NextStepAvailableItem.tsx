@@ -36,9 +36,7 @@ export function NextStepAvailableItem({
     >
       <View style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Text style={{ fontWeight: 600, color: colors.white }}>
-          Un{" "}
-          {`${step.stepType === "Indice" ? "nouvel indice" : "nouveau challenge"}`}{" "}
-          est disponible !
+          {step.nextStepTypeLabel} est disponible !
         </Text>
         {availableIn <= -1 && (
           <Text style={{ fontSize: 12, color: colors.white }}>

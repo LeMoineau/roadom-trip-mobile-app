@@ -16,6 +16,8 @@ export default function TripStatsRecapPage() {
 
   //TODO: ne colorer que les plus gros nombres
 
+  //TODO: idées stats: - challenge le plus utilisés - le challenge finit le plus vite - nb total de demande d'aide à des personnes
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1, paddingHorizontal: 20, paddingTop: 20 }}>
@@ -28,8 +30,8 @@ export default function TripStatsRecapPage() {
             color={colors.blue}
           ></StatItem>
           <StatItem
-            label="Aides demandées"
-            value="3"
+            label="Vous avez rencontrée"
+            value={`${trip.totalPersonAsked}`}
             valueIcon="person"
             color={colors.amber}
           ></StatItem>

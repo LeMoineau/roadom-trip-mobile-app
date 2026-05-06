@@ -3,7 +3,7 @@ export const stepsNames = {
   "5-blue-car-challenge": "",
   "change-wheel-challenge": "",
   "fuel-stop-challenge": "",
-  "nose-challenge": "",
+  "nose-challenge": "Gros Nez !",
   "potatoe-challenge": "",
   "push-car-challenge": "",
   "state-product-challenge": "",

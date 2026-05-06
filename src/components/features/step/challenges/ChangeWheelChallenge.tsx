@@ -1,10 +1,10 @@
-import { ChangeWheelChallengeDto } from "../../../../shared/types/dto/challenges/ChangeWheelChallenge.dto";
+import { Challenge } from "../../../../models/features/challenge.model";
 import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function ChangeWheelChallenge({
-  step,
+  challenge,
 }: {
-  step: ChangeWheelChallengeDto;
+  challenge: Challenge;
 }) {
-  return <ChallengeStepItem step={step}></ChallengeStepItem>;
+  return <ChallengeStepItem challenge={challenge}></ChallengeStepItem>;
 }

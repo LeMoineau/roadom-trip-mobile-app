@@ -42,11 +42,37 @@ export default function TripSettingTab() {
               updateTrip(trip);
               router.push({ pathname: "/trips/[id]", params: { id: trip.id } });
               showToast({
-                message: `Un nouvel indice a été révélé !`,
+                message: `${nextStep.newStepTypeLabel} a été révélé !`,
                 bgColor: colors.green[500],
                 duration: 3000,
               });
             }
+          },
+        },
+      ],
+    );
+  };
+
+  const handleRemovePersonAsking = () => {
+    Alert.alert(
+      "Retirer 1 Aide",
+      "Avez-vous bien demander de l'aide à une personne ?",
+      [
+        {
+          text: "Non",
+          style: "cancel",
+        },
+        {
+          text: "Oui",
+          onPress: () => {
+            trip.addPersonAsked(1);
+            trip.removePersonAvailable(1);
+            updateTrip(trip);
+            showToast({
+              message: "Une Aide vous a bien été retirée",
+              bgColor: colors.yellow[200],
+              duration: 3000,
+            });
           },
         },
       ],
@@ -129,6 +155,17 @@ export default function TripSettingTab() {
               content="Forcer le prochain indice"
               prependIcon={<ExpoIcon name="play-forward" size={20}></ExpoIcon>}
               onPress={handleForceNextStep}
+            ></OutlineButton>
+          )}
+          {!!trip.personAskingAvailable && trip.personAskingAvailable > 0 && (
+            <OutlineButton
+              content="Retirer 1 Aide"
+              style={{
+                backgroundColor: colors.blue[50],
+                borderColor: colors.blue[200],
+              }}
+              prependIcon={<ExpoIcon name="open-outline" size={20}></ExpoIcon>}
+              onPress={handleRemovePersonAsking}
             ></OutlineButton>
           )}
           {!["finish", "abandoned"].includes(trip.status) && (

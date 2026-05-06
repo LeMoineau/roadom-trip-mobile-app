@@ -43,8 +43,7 @@ export function NextStepNotAvailableItem({
         style={{ flex: 1, display: "flex", flexDirection: "column", gap: 5 }}
       >
         <Text style={{ fontWeight: 600, color: colors.yellow[500] }}>
-          Le prochain {`${step.stepType === "Indice" ? "indice" : "challenge"}`}{" "}
-          sera bientôt disponible
+          {step.nextStepTypeLabel} sera bientôt disponible
         </Text>
         {availableIn > 0 && (
           <Text

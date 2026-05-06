@@ -1,7 +1,9 @@
 import { Route, RouteStep } from "osrm";
 import { AllIconNames } from "../../components/common/icons/ExpoIcon";
+import { ChallengeDto } from "../../shared/types/dto/challenges/Challenge.dto";
 import { TripDto } from "../../shared/types/dto/trip/Trip.dto";
 import { DateUtils } from "../../shared/utils/date.utils";
+import { Challenge } from "./challenge.model";
 import { Step } from "./step.model";
 
 export class Trip {
@@ -10,7 +12,11 @@ export class Trip {
 
   constructor(dto: TripDto) {
     this.dto = dto;
-    this.steps = dto.steps.map((s) => new Step(s));
+    this.steps = dto.steps.map((s) =>
+      s.type.includes("challenge")
+        ? new Challenge(s as ChallengeDto, this)
+        : new Step(s, this),
+    );
   }
 
   get id() {
@@ -37,12 +43,36 @@ export class Trip {
     return this.dto.status;
   }
 
-  get personAskingAvailable() {
+  get personAskingAvailable(): number | undefined {
     return this.dto.personAskingAvailable;
+  }
+
+  set personAskingAvailable(nb: number) {
+    this.dto.personAskingAvailable = nb;
   }
 
   get route() {
     return this.dto.route;
+  }
+
+  get duration() {
+    if (!!!this.endingAt) return;
+    return DateUtils.diffInMinute(
+      new Date(this.endingAt),
+      new Date(this.createdAt),
+    );
+  }
+
+  set allow5sGps(val: boolean) {
+    this.dto.allow5sGps = val;
+  }
+
+  get totalPersonAsked(): number | undefined {
+    return this.dto.totalPersonAsked;
+  }
+
+  set totalPersonAsked(val: number) {
+    this.totalPersonAsked = val;
   }
 
   getNextStep(): Step | undefined {
@@ -78,7 +108,7 @@ export class Trip {
   getStatusStyle(): { label: string; icon: AllIconNames; color: string } {
     switch (this.status) {
       case "new":
-        return { label: "Nouveau", icon: "new-releases", color: "gray" };
+        return { label: "Nouveau", icon: "new-releases", color: "blue" };
       case "ongoing":
         return { label: "En cours", icon: "clock-o", color: "green" };
       case "finish":
@@ -109,14 +139,6 @@ export class Trip {
     }
   }
 
-  get duration() {
-    if (!!!this.endingAt) return;
-    return DateUtils.diffInMinute(
-      new Date(this.endingAt),
-      new Date(this.createdAt),
-    );
-  }
-
   finish() {
     this.dto.status = "finish";
     this.dto.endingAt = new Date().toString();
@@ -125,6 +147,28 @@ export class Trip {
   abandon() {
     this.dto.status = "abandoned";
     this.dto.endingAt = new Date().toString();
+  }
+
+  addPersonAvailable(nb: number) {
+    if (this.personAskingAvailable === undefined) {
+      this.personAskingAvailable = nb;
+    } else {
+      this.personAskingAvailable += nb;
+    }
+  }
+
+  removePersonAvailable(nb: number) {
+    if (this.personAskingAvailable !== undefined) {
+      this.personAskingAvailable -= nb;
+    }
+  }
+
+  addPersonAsked(nb: number) {
+    if (this.totalPersonAsked === undefined) {
+      this.totalPersonAsked = nb;
+    } else {
+      this.totalPersonAsked += nb;
+    }
   }
 
   toDto() {

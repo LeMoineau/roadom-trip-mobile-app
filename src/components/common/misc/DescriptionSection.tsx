@@ -3,15 +3,17 @@ import { colors } from "../../../constants/style/colors";
 import { AllIconNames } from "../icons/ExpoIcon";
 import TagItem from "../items/TagItem";
 
+export interface DescriptionSectionItem {
+  label: string;
+  value: string;
+  icon?: AllIconNames;
+  color?: string;
+}
+
 export default function DescriptionSection({
   items,
 }: {
-  items: {
-    label: string;
-    value: string;
-    icon?: AllIconNames;
-    color?: string;
-  }[];
+  items: DescriptionSectionItem[];
 }) {
   return (
     <View

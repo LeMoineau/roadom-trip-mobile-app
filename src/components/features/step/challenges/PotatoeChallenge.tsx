@@ -1,10 +1,10 @@
-import { PotatoeChallengeDto } from "../../../../shared/types/dto/challenges/PotatoeChallenge.dto";
+import { Challenge } from "../../../../models/features/challenge.model";
 import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function PotatoeChallenge({
-  step,
+  challenge,
 }: {
-  step: PotatoeChallengeDto;
+  challenge: Challenge;
 }) {
-  return <ChallengeStepItem step={step}></ChallengeStepItem>;
+  return <ChallengeStepItem challenge={challenge}></ChallengeStepItem>;
 }

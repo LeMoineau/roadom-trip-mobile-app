@@ -1,10 +1,10 @@
-import { ComplimentChallengeDto } from "../../../../shared/types/dto/challenges/ComplimentChallenge.dto";
+import { Challenge } from "../../../../models/features/challenge.model";
 import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function ComplimentChallenge({
-  step,
+  challenge,
 }: {
-  step: ComplimentChallengeDto;
+  challenge: Challenge;
 }) {
-  return <ChallengeStepItem step={step}></ChallengeStepItem>;
+  return <ChallengeStepItem challenge={challenge}></ChallengeStepItem>;
 }

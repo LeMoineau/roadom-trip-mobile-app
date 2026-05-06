@@ -1,10 +1,10 @@
-import { BlueCar5ChallengeDto } from "../../../../shared/types/dto/challenges/BlueCar5Challenge.dto";
+import { Challenge } from "../../../../models/features/challenge.model";
 import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function BlueCar5Challenge({
-  step,
+  challenge,
 }: {
-  step: BlueCar5ChallengeDto;
+  challenge: Challenge;
 }) {
-  return <ChallengeStepItem step={step}></ChallengeStepItem>;
+  return <ChallengeStepItem challenge={challenge}></ChallengeStepItem>;
 }

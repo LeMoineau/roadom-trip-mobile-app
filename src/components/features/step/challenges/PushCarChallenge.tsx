@@ -1,10 +1,10 @@
-import { PushCarChallengeDto } from "../../../../shared/types/dto/challenges/PushCarChallenge.dto";
+import { Challenge } from "../../../../models/features/challenge.model";
 import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function PushCarChallenge({
-  step,
+  challenge,
 }: {
-  step: PushCarChallengeDto;
+  challenge: Challenge;
 }) {
-  return <ChallengeStepItem step={step}></ChallengeStepItem>;
+  return <ChallengeStepItem challenge={challenge}></ChallengeStepItem>;
 }

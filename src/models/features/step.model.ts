@@ -2,12 +2,15 @@ import { stepsNames } from "../../constants/features/steps-name";
 import { ProximityNotificationDto } from "../../shared/types/dto/notifications/ProximityNotification.dto";
 import { StepDto } from "../../shared/types/dto/Step.dto";
 import { DateUtils } from "../../shared/utils/date.utils";
+import { Trip } from "./trip.model";
 
 export class Step {
   dto: StepDto;
+  trip: Trip;
 
-  constructor(dto: StepDto) {
+  constructor(dto: StepDto, trip: Trip) {
     this.dto = dto;
+    this.trip = trip;
   }
 
   get id() {
@@ -16,6 +19,10 @@ export class Step {
 
   get reach() {
     return this.dto.reach;
+  }
+
+  set reach(val: boolean) {
+    this.dto.reach = val;
   }
 
   get type() {
@@ -61,6 +68,30 @@ export class Step {
 
   get availableInHumanReadable(): string {
     return DateUtils.diffHumanlyReadable(this.availableIn);
+  }
+
+  get nextStepTypeLabel() {
+    if (this.stepType === "Challenge") {
+      return "Le prochain challenge";
+    }
+    if (this.stepType === "Notification") {
+      return "La prochaine notification";
+    }
+    return "Le prochain indice";
+  }
+
+  get newStepTypeLabel() {
+    if (this.stepType === "Challenge") {
+      return "Un nouveau challenge";
+    }
+    if (this.stepType === "Notification") {
+      return "Une nouvelle notification";
+    }
+    return "Un nouvel indice";
+  }
+
+  set availableAt(val: Date) {
+    this.dto.availableAt = val;
   }
 
   toDto() {

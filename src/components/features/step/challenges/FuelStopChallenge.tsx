@@ -1,10 +1,10 @@
-import { FuelStopChallengeDto } from "../../../../shared/types/dto/challenges/FuelStopChallenge.dto";
+import { Challenge } from "../../../../models/features/challenge.model";
 import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function FuelStopChallenge({
-  step,
+  challenge,
 }: {
-  step: FuelStopChallengeDto;
+  challenge: Challenge;
 }) {
-  return <ChallengeStepItem step={step}></ChallengeStepItem>;
+  return <ChallengeStepItem challenge={challenge}></ChallengeStepItem>;
 }

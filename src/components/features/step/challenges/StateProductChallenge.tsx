@@ -1,10 +1,10 @@
-import { StateProductChallengeDto } from "../../../../shared/types/dto/challenges/StateProductChallenge.dto";
+import { Challenge } from "../../../../models/features/challenge.model";
 import ChallengeStepItem from "../ChallengeStepItem";
 
 export default function StateProductChallenge({
-  step,
+  challenge,
 }: {
-  step: StateProductChallengeDto;
+  challenge: Challenge;
 }) {
-  return <ChallengeStepItem step={step}></ChallengeStepItem>;
+  return <ChallengeStepItem challenge={challenge}></ChallengeStepItem>;
 }
