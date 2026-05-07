@@ -2,15 +2,18 @@ import { router, useLocalSearchParams } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 import { AllIconNames } from "../../../../components/common/icons/ExpoIcon";
 import NoMoreStepItem from "../../../../components/common/items/NoMoreStepItem";
-import NoTripYetItem from "../../../../components/common/items/NoTripYetItem";
 import ProximityNotificationItem from "../../../../components/common/items/ProximityNotificationItem";
 import DescriptionSection from "../../../../components/common/misc/DescriptionSection";
 import Divider from "../../../../components/common/misc/Divider";
+import LoadingPage from "../../../../components/common/misc/LoadingPage";
 import MapTimeline from "../../../../components/common/misc/MapTimeline";
 import NextStepItem from "../../../../components/features/trip/NextStepItem";
+import StartingStepItem from "../../../../components/features/trip/StartingStepItem";
 import StepItem from "../../../../components/features/trip/StepItem";
 import { colors } from "../../../../constants/style/colors";
+import useUserLocation from "../../../../hooks/common/use-user-location";
 import useTripRepository from "../../../../hooks/features/trip/useTripRepository";
+import { GeoPoint } from "../../../../shared/models/GeoPoint.model";
 import { ArrayUtils } from "../../../../shared/utils/array.utils";
 import { DateUtils } from "../../../../shared/utils/date.utils";
 
@@ -18,12 +21,10 @@ export default function TripPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { trip, updateTrip } = useTripRepository({ id });
 
+  const { getLocation } = useUserLocation();
+
   if (!!!trip) {
-    return (
-      <View style={{ padding: 20, paddingTop: 0 }}>
-        <NoTripYetItem></NoTripYetItem>
-      </View>
-    );
+    return <LoadingPage></LoadingPage>;
   }
 
   return (
@@ -39,8 +40,7 @@ export default function TripPage() {
                 color,
               })),
               ...ArrayUtils.itemOrVoid(
-                (!!!trip.startingAt ||
-                  ["finish", "abandoned"].includes(trip.status)) && {
+                (!!!trip.startingAt || trip.ended) && {
                   label: "Création",
                   value: DateUtils.toHHmmDDMMYY(new Date(trip.createdAt)),
                 },
@@ -94,6 +94,30 @@ export default function TripPage() {
                   </View>
                 ),
               },
+              {
+                desc: (
+                  <StartingStepItem
+                    started={trip.started}
+                    startingDate={new Date(trip.startingAt)}
+                    onPress={() => {
+                      if (trip.started) return;
+                      trip.start();
+                      getLocation().then((res) => {
+                        if (!!res) {
+                          trip.addPointInTraveledRoute(
+                            new GeoPoint({
+                              lat: res.coords.latitude,
+                              lon: res.coords.longitude,
+                            }),
+                          );
+                          updateTrip(trip);
+                        }
+                      });
+                      updateTrip(trip);
+                    }}
+                  ></StartingStepItem>
+                ),
+              },
               ...trip.steps
                 .filter((s) => !!s.reach)
                 .map((s, index) => ({
@@ -110,20 +134,18 @@ export default function TripPage() {
                   ),
                 })),
               ...ArrayUtils.itemOrVoid(
-                !!trip.getNextStep() && {
-                  desc: (
-                    <NextStepItem
-                      step={trip.getNextStep()!}
-                      onOpenNextStep={(step) => {
-                        if (trip.nbStepsReached <= 0) {
-                          trip.start();
-                        }
-                        step.reached();
-                        updateTrip(trip);
-                      }}
-                    ></NextStepItem>
-                  ),
-                },
+                !!trip.getNextStep() &&
+                  trip.started && {
+                    desc: (
+                      <NextStepItem
+                        step={trip.getNextStep()!}
+                        onOpenNextStep={(step) => {
+                          step.reached();
+                          updateTrip(trip);
+                        }}
+                      ></NextStepItem>
+                    ),
+                  },
               ),
             ]}
           ></MapTimeline>

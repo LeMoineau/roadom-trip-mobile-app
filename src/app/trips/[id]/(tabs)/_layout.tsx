@@ -58,8 +58,8 @@ export default function TripPageLayout() {
           title: "Settings",
           tabBarIcon: ({ focused, color }) => (
             <ExpoIcon
-              name={focused ? "settings" : "settings-outline"}
-              size={20}
+              name={focused ? "menu-open" : "menu-outline"}
+              size={22}
               style={{ color }}
             ></ExpoIcon>
           ),

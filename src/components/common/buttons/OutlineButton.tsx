@@ -62,7 +62,12 @@ export default function OutlineButton({
         {content && (
           <Text
             style={[
-              { fontSize: 15, fontWeight: 500, color: colors.black },
+              {
+                fontSize: 15,
+                fontWeight: 500,
+                color: colors.black,
+                flex: 1,
+              },
               textStyle,
             ]}
           >

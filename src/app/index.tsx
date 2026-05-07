@@ -7,11 +7,16 @@ import ExpoIcon from "../components/common/icons/ExpoIcon";
 import NoTripYetItem from "../components/common/items/NoTripYetItem";
 import TripPreviewItem from "../components/features/index/TripPreviewItem";
 import { colors } from "../constants/style/colors";
+import useNotifications from "../hooks/common/use-notifications";
 import { useTripStore } from "../stores/features/trip/trip.store";
+
+//TODO: retirer bouton Test
 
 export default function Index() {
   const [refreshing, setRefreshing] = useState(false);
   const trip = useTripStore((state) => state.trip);
+  const { schedulePushNotification, sendPushNotification, expoPushToken } =
+    useNotifications();
 
   const handlePageRefresh = () => {
     setRefreshing(true);
@@ -61,6 +66,19 @@ export default function Index() {
           appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
           onPress={() => {
             router.push("/history");
+          }}
+          style={{ width: "100%" }}
+        ></OutlineButton>
+        <OutlineButton
+          content="Test"
+          appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
+          onPress={() => {
+            schedulePushNotification();
+            sendPushNotification({
+              title: "coucou",
+              body: "salut",
+              to: expoPushToken,
+            });
           }}
           style={{ width: "100%" }}
         ></OutlineButton>

@@ -1,28 +1,43 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useContext } from "react";
-import { Alert, ScrollView, View } from "react-native";
+import { ActivityIndicator, Alert, ScrollView, View } from "react-native";
 import OutlineButton from "../../../../components/common/buttons/OutlineButton";
 import ExpoIcon from "../../../../components/common/icons/ExpoIcon";
-import NoTripYetItem from "../../../../components/common/items/NoTripYetItem";
+import LoadingPage from "../../../../components/common/misc/LoadingPage";
 import { colors } from "../../../../constants/style/colors";
 import { ToastContext } from "../../../../contexts/contexts";
+import useUserLocation from "../../../../hooks/common/use-user-location";
 import useArchivedTrips from "../../../../hooks/features/trip/useArchivedTrips";
 import useTripRepository from "../../../../hooks/features/trip/useTripRepository";
+import { GeoPoint } from "../../../../shared/models/GeoPoint.model";
+import { DateUtils } from "../../../../shared/utils/date.utils";
 
 export default function TripSettingTab() {
-  const { archiveTrip } = useArchivedTrips();
-  const { showToast } = useContext(ToastContext);
-
   const { id } = useLocalSearchParams<{ id: string }>();
   const { trip, updateTrip } = useTripRepository({ id });
 
+  const { archiveTrip } = useArchivedTrips();
+  const { showToast } = useContext(ToastContext);
+  const { userLocationLoading, getLocation } = useUserLocation();
+
   if (!!!trip) {
-    return (
-      <View style={{ padding: 20, paddingTop: 0 }}>
-        <NoTripYetItem></NoTripYetItem>
-      </View>
-    );
+    return <LoadingPage></LoadingPage>;
   }
+
+  const _addingCurrentPosInTrip = () => {
+    getLocation().then((res) => {
+      if (!!res) {
+        trip.addPointInTraveledRoute(
+          new GeoPoint({
+            lat: res.coords.latitude,
+            lon: res.coords.longitude,
+            label: DateUtils.toHHmmDDMMYY(new Date()),
+          }),
+        );
+        updateTrip(trip);
+      }
+    });
+  };
 
   const handleForceNextStep = () => {
     Alert.alert(
@@ -80,6 +95,11 @@ export default function TripSettingTab() {
     );
   };
 
+  const handleAddingCurrentPosition = () => {
+    if (!!userLocationLoading) return;
+    _addingCurrentPosInTrip();
+  };
+
   const handleAbandonTrip = () => {
     Alert.alert(
       "Donner votre langue au chat",
@@ -93,6 +113,7 @@ export default function TripSettingTab() {
           text: "Oui",
           onPress: () => {
             trip.abandon();
+            _addingCurrentPosInTrip();
             archiveTrip(trip);
             showToast({
               message: "Road-trip terminé et archivé !",
@@ -125,6 +146,7 @@ export default function TripSettingTab() {
           text: "Oui",
           onPress: () => {
             trip.finish();
+            _addingCurrentPosInTrip();
             archiveTrip(trip);
             showToast({
               message: "Road-trip terminé et archivé !",
@@ -147,6 +169,11 @@ export default function TripSettingTab() {
     });
   };
 
+  //TODO: ajouter toast quand ajoute position actuelle
+  //TODO: verif notif proximite -> si dans rayon envoie une notification
+  //TODO: ajouter une methode dans trip "priximityNotificationEnabled" qui verifie si les notifications de proximite sont activée
+  //TODO: ajouter une methode dans trip qui renvoie la range de la notification de proximite current
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView>
@@ -167,14 +194,42 @@ export default function TripSettingTab() {
               onPress={handleRemovePersonAsking}
             ></OutlineButton>
           )}
-          {!["finish", "abandoned"].includes(trip.status) && (
+          {!trip.ended && (
+            <OutlineButton
+              content="Ajouter votre position actuelle"
+              style={{ opacity: userLocationLoading ? 0.5 : 1 }}
+              prependIcon={
+                userLocationLoading ? (
+                  <ActivityIndicator></ActivityIndicator>
+                ) : (
+                  <ExpoIcon name="my-location" size={20}></ExpoIcon>
+                )
+              }
+              onPress={handleAddingCurrentPosition}
+            ></OutlineButton>
+          )}
+          {!trip.ended && (
+            <OutlineButton
+              content="Vérifier Notification Proximité"
+              style={{ opacity: userLocationLoading ? 0.5 : 1 }}
+              prependIcon={
+                userLocationLoading ? (
+                  <ActivityIndicator></ActivityIndicator>
+                ) : (
+                  <ExpoIcon name="notifications-active" size={20}></ExpoIcon>
+                )
+              }
+              onPress={handleAddingCurrentPosition}
+            ></OutlineButton>
+          )}
+          {!trip.ended && (
             <OutlineButton
               content="Donner sa langue au chat"
               prependIcon={<ExpoIcon name="location-on" size={20}></ExpoIcon>}
               onPress={handleAbandonTrip}
             ></OutlineButton>
           )}
-          {!["finish", "abandoned"].includes(trip.status) && (
+          {!trip.ended && (
             <OutlineButton
               content="Terminer le Road-Trip"
               style={{
@@ -192,7 +247,7 @@ export default function TripSettingTab() {
               }
             ></OutlineButton>
           )}
-          {["finish", "abandoned"].includes(trip.status) && (
+          {trip.ended && (
             <OutlineButton
               content="Ouvrir le récapitulatif"
               style={{

@@ -43,7 +43,7 @@ export default function StatItem({
       >
         <Text
           style={{
-            fontSize: 45,
+            fontSize: 35,
             fontWeight: 700,
             color: color?.[700],
             marginTop: 0,

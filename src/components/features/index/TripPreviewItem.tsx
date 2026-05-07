@@ -91,13 +91,8 @@ export default function TripPreviewItem({
                   {trip.endingPos.label}
                 </Text>
                 <Text style={{ color: colors.gray[600], fontSize: 12 }}>
-                  {["finish", "abandoned"].includes(trip.status)
-                    ? trip.endingPos.lat.toFixed(3)
-                    : "???"}
-                  ,{" "}
-                  {["finish", "abandoned"].includes(trip.status)
-                    ? trip.endingPos.lon.toFixed(3)
-                    : "???"}
+                  {trip.ended ? trip.endingPos.lat.toFixed(3) : "???"},{" "}
+                  {trip.ended ? trip.endingPos.lon.toFixed(3) : "???"}
                 </Text>
               </View>
               // <View

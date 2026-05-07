@@ -5,11 +5,14 @@ import * as TaskManager from "expo-task-manager";
 import { useEffect } from "react";
 import { Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { storageKeys } from "../config/storage-keys";
 import { colors } from "../constants/style/colors";
 import ToastProvider from "../contexts/ToastProvider";
 import useNotifications from "../hooks/common/use-notifications";
+import useStorage from "../hooks/common/use-storage";
 
 const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
+const { saveJson } = useStorage();
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -20,28 +23,38 @@ Notifications.setNotificationHandler({
   }),
 });
 
+TaskManager.defineTask<Notifications.NotificationTaskPayload>(
+  BACKGROUND_NOTIFICATION_TASK,
+  async ({ data }) => {
+    console.log(data);
+    saveJson(storageKeys.NOTIFICATION_TEST, {
+      ...data,
+      receivedDate: new Date().toString(),
+    });
+    if (
+      !("actionIdentifier" in data) && //n'est pas une notification de réponse
+      data.data.body &&
+      typeof data.data.body === "string"
+    ) {
+    }
+  },
+);
+
+Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
+
+//TODO: continuer d'investiguer pour les notifications en background
+
 export default function RootLayout() {
   const { expoPushToken, shortExpoPushToken, sendPushNotification } =
     useNotifications();
-
-  TaskManager.defineTask<Notifications.NotificationTaskPayload>(
-    BACKGROUND_NOTIFICATION_TASK,
-    async ({ data }) => {
-      console.log(data);
-      if (
-        !("actionIdentifier" in data) && //n'est pas une notification de réponse
-        data.data.body &&
-        typeof data.data.body === "string"
-      ) {
-      }
-    },
-  );
-
-  Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
+  const { saveJson, getJson } = useStorage();
 
   useEffect(() => {
     console.log("token", expoPushToken);
-  }, []);
+    getJson(storageKeys.NOTIFICATION_TEST).then((res) => {
+      console.log("test notif", res);
+    });
+  }, [expoPushToken]);
 
   return (
     <SafeAreaView

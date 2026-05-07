@@ -24,6 +24,7 @@ export default function LocationSelectorPage() {
    * Get the current location of the user and redirect to new-trip index
    */
   const handleGettingUserLocation = () => {
+    if (!!userLocationLoading) return;
     getLocation()
       .then((res) => {
         // TODO: recuperer direction de user location res.coords.heading

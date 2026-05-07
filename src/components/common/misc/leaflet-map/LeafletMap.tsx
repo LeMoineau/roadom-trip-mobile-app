@@ -2,7 +2,8 @@ import { Asset } from "expo-asset";
 import { File } from "expo-file-system";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
-import { LeafletView, MapShape } from "react-native-leaflet-view";
+import { LeafletView, MapMarker, MapShape } from "react-native-leaflet-view";
+import { ArrayUtils } from "../../../../shared/utils/array.utils";
 
 const DEFAULT_LOCATION = {
   latitude: 48.11585637673801,
@@ -16,12 +17,14 @@ export default function LeafletMap({
   putMarkerOnPress,
   putMarkerAtStartingCenter,
   mapShapes,
+  mapMarkers = [],
   onPressPosition,
 }: {
   defaultPos?: { latitude: number; longitude: number };
   defaultZoom?: number;
   putMarkerOnPress?: boolean;
   putMarkerAtStartingCenter?: boolean;
+  mapMarkers?: MapMarker[];
   mapShapes?: MapShape[];
   onPressPosition?: (pos: [number, number]) => void;
 }) {
@@ -60,10 +63,11 @@ export default function LeafletMap({
   return (
     <LeafletView
       doDebug={false}
-      mapMarkers={
-        putMarkerAtStartingCenter
-          ? [
-              {
+      mapMarkers={[
+        ...mapMarkers,
+        ...ArrayUtils.itemOrVoid<MapMarker>(
+          putMarkerAtStartingCenter
+            ? {
                 id: "starting-center-marker", // The ID attached to the marker. It will be returned when onMarkerClicked is called
                 position: {
                   lat: [defaultPos.latitude],
@@ -72,20 +76,18 @@ export default function LeafletMap({
                 icon: "📍", // HTML element that will be displayed as the marker.  It can also be text or an SVG string.
                 size: [32, 32],
                 iconAnchor: [0, 42],
-              },
-            ]
-          : selectedPos
-            ? [
-                {
+              }
+            : selectedPos
+              ? {
                   id: "new-selected-pos-marker", // The ID attached to the marker. It will be returned when onMarkerClicked is called
                   position: { lat: [selectedPos[0]], lng: [selectedPos[1]] }, // Latitude and Longitude of the marker
                   icon: "📍", // HTML element that will be displayed as the marker.  It can also be text or an SVG string.
                   size: [32, 32],
                   iconAnchor: [0, 42],
-                },
-              ]
-            : undefined
-      }
+                }
+              : undefined,
+        ),
+      ]}
       source={{ html: webViewContent }}
       mapCenterPosition={{
         lat: defaultPos.latitude,

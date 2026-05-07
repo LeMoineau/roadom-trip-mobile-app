@@ -15,7 +15,6 @@ export default function TripStatsRecapPage() {
   }
 
   //TODO: ne colorer que les plus gros nombres
-
   //TODO: idées stats: - challenge le plus utilisés - le challenge finit le plus vite
 
   return (
@@ -25,16 +24,17 @@ export default function TripStatsRecapPage() {
         <View style={{ height: 30 }}></View>
         <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
           <StatItem
-            label="Km Parcourus"
-            value="530"
+            label="Distance Parcourue"
+            value={trip.distanceTraveled + "km"}
             color={colors.blue}
           ></StatItem>
-          <StatItem
-            label="Vous avez rencontrée"
-            value={`${trip.totalPersonAsked}`}
-            valueIcon="person"
-            color={colors.amber}
-          ></StatItem>
+          {trip.distancePreferredRoute && (
+            <StatItem
+              label="Distance Optimale"
+              value={Math.round(trip.distancePreferredRoute) + "km"}
+              color={colors.red}
+            ></StatItem>
+          )}
         </View>
         <View style={{ height: 10 }}></View>
         {trip.duration && (
@@ -61,6 +61,13 @@ export default function TripStatsRecapPage() {
             color={colors.green}
           ></StatItem>
         </View>
+        <View style={{ height: 10 }}></View>
+        <StatItem
+          label="Vous avez rencontrée"
+          value={`${trip.totalPersonAsked}`}
+          valueIcon="person"
+          color={colors.amber}
+        ></StatItem>
       </ScrollView>
     </View>
   );

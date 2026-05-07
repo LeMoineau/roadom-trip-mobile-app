@@ -1,8 +1,10 @@
 import { Route, RouteStep } from "osrm";
 import { AllIconNames } from "../../components/common/icons/ExpoIcon";
+import { GeoPoint } from "../../shared/models/GeoPoint.model";
 import { ChallengeDto } from "../../shared/types/dto/challenges/Challenge.dto";
 import { TripDto } from "../../shared/types/dto/trip/Trip.dto";
 import { DateUtils } from "../../shared/utils/date.utils";
+import { GeoUtils } from "../../shared/utils/geo.utils";
 import { Challenge } from "./challenge.model";
 import { Step } from "./step.model";
 
@@ -59,6 +61,27 @@ export class Trip {
     return this.dto.route;
   }
 
+  get preferredRoutePoints(): GeoPoint[] | undefined {
+    if (!!!this.route) return;
+    if (this.route.source === "osrm") {
+      const osrmRes = this.route.route as Route;
+      if (osrmRes.legs.length > 0) {
+        return osrmRes.legs[0].steps
+          .flatMap((s: RouteStep) => {
+            if (typeof s.geometry !== "string") {
+              return [
+                ...s.geometry.coordinates.map(
+                  (coords) => new GeoPoint({ lat: coords[1], lon: coords[0] }),
+                ),
+              ];
+            }
+            return;
+          })
+          .filter((s) => !!s);
+      }
+    }
+  }
+
   get duration() {
     if (!!!this.endingAt) return;
     return DateUtils.diffInMinute(
@@ -71,8 +94,8 @@ export class Trip {
     this.dto.allow5sGps = val;
   }
 
-  get totalPersonAsked(): number | undefined {
-    return this.dto.totalPersonAsked;
+  get totalPersonAsked(): number {
+    return this.dto.totalPersonAsked ?? 0;
   }
 
   set totalPersonAsked(val: number) {
@@ -88,8 +111,52 @@ export class Trip {
     this.dto.steps = ss.map((s) => s.toDto());
   }
 
+  get traveledRoute(): GeoPoint[] {
+    return this.dto.traveledRoute
+      ? this.dto.traveledRoute.map((p) => new GeoPoint(p))
+      : [];
+  }
+
+  set traveledRoute(val: GeoPoint[]) {
+    this.dto.traveledRoute = val.map((p) => p.toDto());
+  }
+
   get nbStepsReached() {
     return this.steps.filter((s) => !!s.reach).length;
+  }
+
+  get distanceTraveled() {
+    let previousPt;
+    let distance = 0;
+    for (let pt of this.traveledRoute) {
+      if (!!previousPt) {
+        distance += GeoUtils.getDistanceBetween(previousPt, pt);
+      }
+      previousPt = pt;
+    }
+    return distance;
+  }
+
+  get distancePreferredRoute(): number | undefined {
+    if (!!!this.route || !!!this.preferredRoutePoints) return;
+    let previousPt;
+    let distance = 0;
+    for (let pt of this.preferredRoutePoints) {
+      if (!!previousPt) {
+        distance += GeoUtils.getDistanceBetween(previousPt, pt);
+      }
+      previousPt = pt;
+    }
+
+    return distance;
+  }
+
+  get started() {
+    return this.status !== "new";
+  }
+
+  get ended() {
+    return ["finish", "abandoned"].includes(this.status);
   }
 
   getNextStep(): Step | undefined {
@@ -191,6 +258,10 @@ export class Trip {
     } else {
       this.totalPersonAsked += nb;
     }
+  }
+
+  addPointInTraveledRoute(pt: GeoPoint) {
+    this.traveledRoute = [...this.traveledRoute, pt];
   }
 
   toDto() {
