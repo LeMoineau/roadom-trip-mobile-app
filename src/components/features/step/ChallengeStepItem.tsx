@@ -64,7 +64,7 @@ export default function ChallengeStepItem({
   const handleEarnChallengeReward = () => {
     Alert.alert(
       "Récupérer la récompense",
-      "Etes-vous sûr de d'avoir bien complété le challenge ?",
+      "Etes-vous sûr d'avoir bien complété le challenge ?",
       [
         {
           text: "Non",

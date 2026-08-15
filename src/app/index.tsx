@@ -69,7 +69,7 @@ export default function Index() {
           }}
           style={{ width: "100%" }}
         ></OutlineButton>
-        <OutlineButton
+        {/* <OutlineButton
           content="Test"
           appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
           onPress={() => {
@@ -81,7 +81,7 @@ export default function Index() {
             });
           }}
           style={{ width: "100%" }}
-        ></OutlineButton>
+        ></OutlineButton> */}
       </ScrollView>
       <FloatingButton
         content="Nouveau Voyage"

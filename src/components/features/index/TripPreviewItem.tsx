@@ -80,7 +80,12 @@ export default function TripPreviewItem({
           },
           {
             desc: (
-              <View style={{ marginTop: 0 }}>
+              <View
+                style={{
+                  marginTop: 0,
+                  paddingRight: 20,
+                }}
+              >
                 <Text
                   style={{
                     fontSize: 15,
@@ -88,7 +93,7 @@ export default function TripPreviewItem({
                     color: colors.gray[800],
                   }}
                 >
-                  {trip.endingPos.label}
+                  {trip.displayOsmEndingDetailsTitle ?? trip.endingPos.label}
                 </Text>
                 <Text style={{ color: colors.gray[600], fontSize: 12 }}>
                   {trip.ended ? trip.endingPos.lat.toFixed(3) : "???"},{" "}

@@ -61,6 +61,24 @@ export class Trip {
     return this.dto.route;
   }
 
+  get displayOsmEndingDetailsTitle() {
+    const address = this.dto.osmEndingDetails?.address;
+    if (!!!address) return;
+    let title = [
+      address.neighbourhood,
+      address.hamlet,
+      address.road,
+      address.village,
+    ];
+    title = title.filter((t) => !!t);
+    if (title.length <= 0) return;
+    return title.join(", ");
+  }
+
+  get osmEndingDetails() {
+    return this.dto.osmEndingDetails;
+  }
+
   get preferredRoutePoints(): GeoPoint[] | undefined {
     if (!!!this.route) return;
     if (this.route.source === "osrm") {

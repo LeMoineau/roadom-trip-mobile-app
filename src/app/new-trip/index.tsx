@@ -17,6 +17,7 @@ export default function NewTripPage() {
   const userLocation = useNewTripConfigStore((state) => state.userLocation);
   const distanceMax = useNewTripConfigStore((state) => state.distanceMax);
   const distanceMin = useNewTripConfigStore((state) => state.distanceMin);
+  const resetNewTripStore = useNewTripConfigStore((state) => state.reset);
   const { showToast } = useContext(ToastContext);
 
   const { loading, trip: beingCreatedTrip, error, createTrip } = useTripApi();
@@ -28,6 +29,7 @@ export default function NewTripPage() {
     if (!startingPos || !distanceMax) return;
     createTrip({
       startingPos,
+      endingPos,
       distanceMax,
       distanceMin,
     });
@@ -40,6 +42,7 @@ export default function NewTripPage() {
         archiveTrip(trip);
       }
       updateTrip(beingCreatedTrip);
+      resetNewTripStore();
       router.dismissTo({
         pathname: "..",
         params: { newTripCreated: beingCreatedTrip.id },

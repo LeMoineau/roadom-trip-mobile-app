@@ -24,7 +24,6 @@ export default function HistoryPage() {
           flex: 1,
           paddingHorizontal: 20,
           paddingTop: 20,
-          paddingBottom: 150,
         }}
       >
         {archivedTrips ? (
@@ -45,6 +44,7 @@ export default function HistoryPage() {
         ) : (
           <NoArchivedTripsYetItem></NoArchivedTripsYetItem>
         )}
+        <View style={{ height: 150 }}></View>
       </ScrollView>
     </View>
   );

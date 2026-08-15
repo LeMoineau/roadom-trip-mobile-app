@@ -13,6 +13,8 @@ export interface OSMResponse {
   name: string;
   display_name: string;
   address: {
+    neighbourhood?: string;
+    hamlet?: string;
     road?: string;
     village?: string;
     municipality?: string;
