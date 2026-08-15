@@ -222,15 +222,17 @@ export default function TripSettingTab() {
               onPress={handleForceNextStep}
             ></OutlineButton>
           )}
-          {!!trip.personAskingAvailable && trip.personAskingAvailable > 0 && (
-            <OutlineButton
-              content="Retirer 1 Aide"
-              prependIcon={
-                <ExpoIcon name="person-remove-alt-1" size={20}></ExpoIcon>
-              }
-              onPress={handleRemovePersonAsking}
-            ></OutlineButton>
-          )}
+          {!trip.ended &&
+            !!trip.personAskingAvailable &&
+            trip.personAskingAvailable > 0 && (
+              <OutlineButton
+                content="Retirer 1 Aide"
+                prependIcon={
+                  <ExpoIcon name="person-remove-alt-1" size={20}></ExpoIcon>
+                }
+                onPress={handleRemovePersonAsking}
+              ></OutlineButton>
+            )}
           {!trip.ended && (
             <OutlineButton
               content="Ajouter votre position actuelle"

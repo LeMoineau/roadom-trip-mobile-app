@@ -71,13 +71,14 @@ export default function RootLayout() {
             name="index"
             options={{
               headerTitle: "AléaCarta",
-              headerRight: () => (
+              headerLeft: () => (
                 <Pressable
                   onPress={() => {
                     router.push("/settings");
                   }}
+                  style={{ marginRight: 20 }}
                 >
-                  <Ionicons name="settings-sharp" size={23}></Ionicons>
+                  <Ionicons name="menu-sharp" size={23}></Ionicons>
                 </Pressable>
               ),
             }}
