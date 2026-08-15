@@ -33,21 +33,23 @@ export default function StartingStepItem({
       }}
       activeOpacity={0.8}
     >
-      <View style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <Text
-          style={{
-            fontWeight: !started ? 600 : undefined,
-            color: !started ? colors.white : colors.green[500],
-            fontSize: !started ? undefined : 12,
-          }}
-        >
-          {!started
-            ? "Vous êtes prêt à partir ?!"
-            : (!!startingDate
-                ? DateUtils.toHHmmDDMMYY(startingDate) + " - "
-                : "") + "Début de l'aventure !"}
-        </Text>
-      </View>
+      {
+        <View style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          <Text
+            style={{
+              fontWeight: !started ? 600 : undefined,
+              color: !started ? colors.white : colors.green[500],
+              fontSize: !started ? undefined : 12,
+            }}
+          >
+            {!started
+              ? "Vous êtes prêt à partir ?!"
+              : (!!startingDate
+                  ? DateUtils.toHHmmDDMMYY(startingDate) + " - "
+                  : "") + "Début de l'aventure !"}
+          </Text>
+        </View>
+      }
       {!started && <Divider style={{ width: "100%" }}></Divider>}
       {!started && (
         <View

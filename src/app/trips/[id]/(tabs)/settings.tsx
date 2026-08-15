@@ -24,14 +24,15 @@ export default function TripSettingTab() {
     return <LoadingPage></LoadingPage>;
   }
 
-  const _addingCurrentPosInTrip = () => {
+  const _addingCurrentPosInTrip = (label?: string) => {
     getLocation().then((res) => {
       if (!!res) {
         trip.addPointInTraveledRoute(
           new GeoPoint({
             lat: res.coords.latitude,
             lon: res.coords.longitude,
-            label: DateUtils.toHHmmDDMMYY(new Date()),
+            label:
+              (label ? `${label} - ` : "") + DateUtils.toHHmmDDMMYY(new Date()),
           }),
         );
         updateTrip(trip);
@@ -149,7 +150,7 @@ export default function TripSettingTab() {
           text: "Oui",
           onPress: () => {
             trip.abandon();
-            _addingCurrentPosInTrip();
+            _addingCurrentPosInTrip("Abandon");
             archiveTrip(trip);
             showToast({
               message: "Road-trip terminé et archivé !",
@@ -182,7 +183,7 @@ export default function TripSettingTab() {
           text: "Oui",
           onPress: () => {
             trip.finish();
-            _addingCurrentPosInTrip();
+            _addingCurrentPosInTrip("Fin");
             archiveTrip(trip);
             showToast({
               message: "Road-trip terminé et archivé !",

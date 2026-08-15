@@ -49,7 +49,7 @@ export default function TripMapRecapPage() {
               lat: [trip.startingPos.lat],
               lng: [trip.startingPos.lon],
             }, // Latitude and Longitude of the marker
-            icon: "📍", // HTML element that will be displayed as the marker.  It can also be text or an SVG string.
+            icon: "🏠", // HTML element that will be displayed as the marker.  It can also be text or an SVG string.
             size: [32, 32],
             iconAnchor: [0, 42],
           },

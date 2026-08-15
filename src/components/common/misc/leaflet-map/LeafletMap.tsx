@@ -81,15 +81,7 @@ export default function LeafletMap({
                 size: [32, 32],
                 iconAnchor: [0, 42],
               }
-            : selectedPos
-              ? {
-                  id: "new-selected-pos-marker", // The ID attached to the marker. It will be returned when onMarkerClicked is called
-                  position: { lat: [selectedPos[0]], lng: [selectedPos[1]] }, // Latitude and Longitude of the marker
-                  icon: "📍", // HTML element that will be displayed as the marker.  It can also be text or an SVG string.
-                  size: [32, 32],
-                  iconAnchor: [0, 42],
-                }
-              : undefined,
+            : undefined,
         ),
       ]}
       source={{ html: webViewContent }}

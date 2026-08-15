@@ -119,7 +119,9 @@ export default function TripPage() {
                 desc: (
                   <StartingStepItem
                     started={trip.started}
-                    startingDate={new Date(trip.startingAt)}
+                    startingDate={
+                      trip.startingAt ? new Date(trip.startingAt) : undefined
+                    }
                     onPress={() => {
                       if (trip.started) return;
                       trip.start();
@@ -129,6 +131,7 @@ export default function TripPage() {
                             new GeoPoint({
                               lat: res.coords.latitude,
                               lon: res.coords.longitude,
+                              label: `Première user location - ${DateUtils.toHHmmDDMMYY(new Date())}`,
                             }),
                           );
                           updateTrip(trip);
