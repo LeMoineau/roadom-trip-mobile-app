@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import NoStepFound from "../../../../components/common/items/NoStepFound";
 import TagItem from "../../../../components/common/items/TagItem";
 import DescriptionSection, {
@@ -19,16 +19,32 @@ export default function TripPage() {
   const { id, index } = useLocalSearchParams<{ id: string; index: string }>();
   const { trip } = useTripRepository({ id });
   const [step, setStep] = useState<Step>();
+  const [loading, setLoading] = useState(true);
 
   const navigation = useNavigation();
 
   useEffect(() => {
-    if (!!trip && !!index && trip.steps.length > parseInt(index)) {
-      const _step = trip.steps[parseInt(index)];
-      setStep(_step);
-      navigation.setOptions({ headerTitle: _step.name });
+    setLoading(true);
+  }, []);
+
+  useEffect(() => {
+    if (!!trip && !!index) {
+      setLoading(false);
+      if (trip.steps.length > parseInt(index)) {
+        const _step = trip.steps[parseInt(index)];
+        setStep(_step);
+        navigation.setOptions({ headerTitle: _step.name });
+      }
     }
   }, [trip, index]);
+
+  if (!!loading) {
+    return (
+      <View style={{ padding: 20, paddingTop: 50 }}>
+        <ActivityIndicator size={"large"}></ActivityIndicator>
+      </View>
+    );
+  }
 
   if (!!!step) {
     return (

@@ -1,4 +1,4 @@
-export interface OSMResponse {
+export interface OSMReverseResponse {
   place_id: number;
   licence: string;
   osm_type: string;

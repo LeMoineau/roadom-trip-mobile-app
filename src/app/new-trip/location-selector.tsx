@@ -8,7 +8,9 @@ import ExpoIcon from "../../components/common/icons/ExpoIcon";
 import LeafletMap from "../../components/common/misc/leaflet-map/LeafletMap";
 import { colors } from "../../constants/style/colors";
 import useUserLocation from "../../hooks/common/use-user-location";
+import osmService from "../../services/osm.service";
 import { GeoPoint } from "../../shared/models/GeoPoint.model";
+import { OSMSearchResponse } from "../../shared/types/osm/OSMSearchResponse";
 import { useNewTripConfigStore } from "../../stores/features/new-trip/new-trip-config.store";
 
 export default function LocationSelectorPage() {
@@ -19,6 +21,7 @@ export default function LocationSelectorPage() {
   }>();
   const inputRef = useRef<TextInput>(null);
   const [selectedPos, setSelectedPos] = useState<[number, number]>();
+  const [selectedPosName, setSelectedPosName] = useState<string>();
   const updateStartingPos = useNewTripConfigStore(
     (state) => state.updateStartingPos,
   );
@@ -26,6 +29,7 @@ export default function LocationSelectorPage() {
     (state) => state.updateEndingPos,
   );
   const { userLocationLoading, getLocation } = useUserLocation();
+  const [queryLoading, setQueryLoading] = useState(false);
 
   /**
    * Get the current location of the user and redirect to new-trip index
@@ -69,6 +73,17 @@ export default function LocationSelectorPage() {
     });
   };
 
+  const handleSearchResponse = (res?: OSMSearchResponse[]) => {
+    if (!!res && res.length > 0 && !!res[0].lat && !!res[0].lon) {
+      try {
+        setSelectedPos([parseFloat(res[0].lat), parseFloat(res[0].lon)]);
+        setSelectedPosName(res[0].display_name);
+      } catch (err) {
+        console.error("error during parse of osm search response lat/lon");
+      }
+    }
+  };
+
   const _updatePosition = ({
     lat,
     lon,
@@ -85,7 +100,10 @@ export default function LocationSelectorPage() {
         ? new GeoPoint({
             lat,
             lon,
-            label: label ?? (posType === "ending" ? "Arrivée" : "Départ"),
+            label:
+              selectedPosName ??
+              label ??
+              (posType === "ending" ? "Arrivée" : "Départ"),
           }).toDto()
         : undefined;
     if (posType === "ending") {
@@ -167,8 +185,27 @@ export default function LocationSelectorPage() {
             borderColor: colors.gray[200],
             padding: 20,
             borderRadius: 20,
+            color: colors.black,
+            opacity: queryLoading ? 0.7 : 1,
           }}
-          placeholder="Rue de la gare"
+          value={selectedPosName}
+          placeholder="2 Rue de la gare"
+          placeholderTextColor={colors.gray[500]}
+          onChangeText={setSelectedPosName}
+          onSubmitEditing={(evt) => {
+            const query = evt.nativeEvent.text.trim();
+            if (!!query && query.length > 0) {
+              setQueryLoading(true);
+              osmService
+                .search({ q: evt.nativeEvent.text })
+                .then((res) => {
+                  handleSearchResponse(res);
+                  // if (res?.display_name)  = res.display_name
+                })
+                .finally(() => setQueryLoading(false));
+            }
+          }}
+          editable={!queryLoading}
         ></TextInput>
         <OutlineButton
           content="Utiliser votre géolocalisation"

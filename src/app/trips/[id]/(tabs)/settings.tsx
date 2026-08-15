@@ -55,13 +55,49 @@ export default function TripSettingTab() {
             if (!!nextStep) {
               nextStep.dto.reach = true;
               updateTrip(trip);
-              router.push({ pathname: "/trips/[id]", params: { id: trip.id } });
+              router.push({
+                pathname: "/trips/[id]",
+                params: { id: trip.id, refresh: new Date().getTime() },
+              });
               showToast({
                 message: `${nextStep.newStepTypeLabel} a été révélé !`,
                 bgColor: colors.green[500],
                 duration: 3000,
               });
             }
+          },
+        },
+      ],
+    );
+  };
+
+  const handleForceAllNextStep = () => {
+    Alert.alert(
+      "Forcer tous les indices",
+      "Etes-vous sûr de vouloir forcer tous les indices de votre road-trip ?",
+      [
+        {
+          text: "Non",
+          style: "cancel",
+        },
+        {
+          text: "Oui",
+          onPress: () => {
+            let nextStep = trip.getNextStep();
+            while (!!nextStep) {
+              nextStep.dto.reach = true;
+              nextStep = trip.getNextStep();
+            }
+            updateTrip(trip);
+            router.push({
+              pathname: "/trips/[id]",
+              params: { id: trip.id, refresh: new Date().getTime() },
+            });
+            showToast({
+              message: `Tous les indices ont été révélés`,
+              bgColor: colors.green[500],
+              duration: 3000,
+            });
           },
         },
       ],
@@ -245,6 +281,15 @@ export default function TripSettingTab() {
                   style={{ color: colors.red[500] }}
                 ></ExpoIcon>
               }
+            ></OutlineButton>
+          )}
+          {!!trip.getNextStep() && trip.ended && (
+            <OutlineButton
+              content="Forcer tous les indices"
+              prependIcon={
+                <ExpoIcon name="play-skip-forward" size={20}></ExpoIcon>
+              }
+              onPress={handleForceAllNextStep}
             ></OutlineButton>
           )}
           {trip.ended && (

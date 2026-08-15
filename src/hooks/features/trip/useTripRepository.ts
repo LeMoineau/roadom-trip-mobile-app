@@ -7,16 +7,21 @@ export default function useTripRepository({ id }: { id?: string }) {
   const [foundTrip, setTrip] = useState<Trip>();
   const trip = useTripStore((state) => state.trip);
   const updateTrip = useTripStore((state) => state.updateTrip);
-  const { archivedTrips, updateArchivedTrip } = useArchivedTrips();
+  const { archivedTrips, updateArchivedTrip, loadArchivedTrips } =
+    useArchivedTrips();
 
   useEffect(() => {
+    _init();
+  }, [trip, archivedTrips]);
+
+  const _init = () => {
     if (!!!id) return;
     if (!!trip && trip.id === id) {
       setTrip(trip);
     } else {
       setTrip(archivedTrips?.find((t) => t.id === id));
     }
-  }, [trip, archivedTrips]);
+  };
 
   const getTrip = ({ id }: { id: string }) => {
     let res;
@@ -42,5 +47,10 @@ export default function useTripRepository({ id }: { id?: string }) {
     }
   };
 
-  return { trip: foundTrip, getTrip, updateTrip: _updateTrip };
+  const refresh = async () => {
+    await loadArchivedTrips();
+    _init();
+  };
+
+  return { trip: foundTrip, getTrip, updateTrip: _updateTrip, refresh };
 }

@@ -56,6 +56,10 @@ export default function LeafletMap({
     };
   }, []);
 
+  useEffect(() => {
+    setSelectedPos([defaultPos.latitude, defaultPos.longitude]);
+  }, [defaultPos]);
+
   if (!webViewContent) {
     return <ActivityIndicator size="large" style={{ marginTop: 30 }} />;
   }

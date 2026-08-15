@@ -1,5 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { ScrollView, Text, View } from "react-native";
+import { useEffect } from "react";
+import { RefreshControl, ScrollView, Text, View } from "react-native";
 import { AllIconNames } from "../../../../components/common/icons/ExpoIcon";
 import NoMoreStepItem from "../../../../components/common/items/NoMoreStepItem";
 import ProximityNotificationItem from "../../../../components/common/items/ProximityNotificationItem";
@@ -18,10 +19,21 @@ import { ArrayUtils } from "../../../../shared/utils/array.utils";
 import { DateUtils } from "../../../../shared/utils/date.utils";
 
 export default function TripPage() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const { trip, updateTrip } = useTripRepository({ id });
+  const { id, refresh } = useLocalSearchParams<{
+    id: string;
+    refresh?: string;
+  }>();
+  const {
+    trip,
+    updateTrip,
+    refresh: refreshTripRepo,
+  } = useTripRepository({ id });
 
   const { getLocation } = useUserLocation();
+
+  useEffect(() => {
+    refreshTripRepo();
+  }, [refresh]);
 
   if (!!!trip) {
     return <LoadingPage></LoadingPage>;
@@ -29,7 +41,16 @@ export default function TripPage() {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={() => {
+              refreshTripRepo();
+            }}
+          ></RefreshControl>
+        }
+      >
         <View style={{ flex: 1, padding: 20, gap: 20 }}>
           <DescriptionSection
             items={[
