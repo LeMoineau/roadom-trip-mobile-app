@@ -13,6 +13,7 @@ import { useTripStore } from "../../stores/features/trip/trip.store";
 
 export default function NewTripPage() {
   const startingPos = useNewTripConfigStore((state) => state.startingPos);
+  const endingPos = useNewTripConfigStore((state) => state.endingPos);
   const userLocation = useNewTripConfigStore((state) => state.userLocation);
   const distanceMax = useNewTripConfigStore((state) => state.distanceMax);
   const distanceMin = useNewTripConfigStore((state) => state.distanceMin);
@@ -85,9 +86,43 @@ export default function NewTripPage() {
         onPress={() => {
           router.push({
             pathname: "/new-trip/location-selector",
-            params: startingPos
-              ? { currentPos: `[${startingPos.lat}, ${startingPos.lon}]` }
-              : {},
+            params: {
+              currentPos: startingPos
+                ? `[${startingPos.lat}, ${startingPos.lon}]`
+                : undefined,
+              posType: "starting",
+            },
+          });
+        }}
+      ></OutlineButton>
+      <OutlineButton
+        content={
+          endingPos?.label ??
+          (userLocation ? "Votre position actuelle" : "Arrivée")
+        }
+        prependIcon={
+          <ExpoIcon
+            name="circle-o"
+            size={20}
+            style={{
+              color: endingPos ? colors.black : colors.gray[500],
+            }}
+          ></ExpoIcon>
+        }
+        appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
+        textStyle={{
+          color: endingPos ? colors.black : colors.gray[500],
+        }}
+        onPress={() => {
+          router.push({
+            pathname: "/new-trip/location-selector",
+            params: {
+              currentPos: endingPos
+                ? `[${endingPos.lat}, ${endingPos.lon}]`
+                : undefined,
+              posType: "ending",
+              resetable: "true",
+            },
           });
         }}
       ></OutlineButton>
