@@ -29,7 +29,7 @@ class RoadomTripApiService {
         data: { ...req },
       })
       .then((res) => {
-        console.log("created trip", res.data);
+        console.debug("trip creation api response: ", res.data);
         if (!!!res.data) {
           console.error(`error getting trip creation response`, req, res);
           return undefined;

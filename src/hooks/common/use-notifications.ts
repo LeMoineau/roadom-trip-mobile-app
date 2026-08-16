@@ -81,7 +81,6 @@ export default function useNotifications() {
             projectId,
           })
         ).data;
-        console.log("token ici", token);
       } catch (e) {
         token = `${e}`;
       }
@@ -92,16 +91,22 @@ export default function useNotifications() {
     return token;
   }
 
-  async function schedulePushNotification() {
+  async function schedulePushNotification({
+    content,
+    delayInSecond = 0,
+  }: {
+    content: {
+      title: string;
+      body: string;
+      data?: any;
+    };
+    delayInSecond?: number;
+  }) {
     await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "You've got mail! 📬",
-        body: "Here is the notification body",
-        data: { data: "goes here", test: { test1: "more data" } },
-      },
+      content,
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-        seconds: 2,
+        seconds: delayInSecond,
       },
     });
   }

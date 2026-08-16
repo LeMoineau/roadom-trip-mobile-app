@@ -2,13 +2,11 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Notifications from "expo-notifications";
 import { router, Stack } from "expo-router";
 import * as TaskManager from "expo-task-manager";
-import { useEffect } from "react";
 import { Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { storageKeys } from "../config/storage-keys";
 import { colors } from "../constants/style/colors";
 import ToastProvider from "../contexts/ToastProvider";
-import useNotifications from "../hooks/common/use-notifications";
 import useStorage from "../hooks/common/use-storage";
 
 const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
@@ -26,7 +24,6 @@ Notifications.setNotificationHandler({
 TaskManager.defineTask<Notifications.NotificationTaskPayload>(
   BACKGROUND_NOTIFICATION_TASK,
   async ({ data }) => {
-    console.log(data);
     saveJson(storageKeys.NOTIFICATION_TEST, {
       ...data,
       receivedDate: new Date().toString(),
@@ -45,17 +42,6 @@ Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
 //TODO: continuer d'investiguer pour les notifications en background
 
 export default function RootLayout() {
-  const { expoPushToken, shortExpoPushToken, sendPushNotification } =
-    useNotifications();
-  const { saveJson, getJson } = useStorage();
-
-  useEffect(() => {
-    console.log("token", expoPushToken);
-    getJson(storageKeys.NOTIFICATION_TEST).then((res) => {
-      console.log("test notif", res);
-    });
-  }, [expoPushToken]);
-
   return (
     <SafeAreaView
       edges={{ top: "off", bottom: "additive" }}

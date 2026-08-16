@@ -28,7 +28,7 @@ export default function useArchivedTrips() {
   };
 
   const archiveTrip = (trip: Trip) => {
-    console.log(trip.id + " archived");
+    console.debug(`trip #${trip.id} archived`);
     saveJson(storageKeys.ARCHIVED_TRIPS, [
       ...(archivedTrips?.map((t) => t.toDto()) ?? []),
       trip.toDto(),

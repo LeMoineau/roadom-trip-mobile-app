@@ -2,6 +2,7 @@ import { Route, RouteStep } from "osrm";
 import { AllIconNames } from "../../components/common/icons/ExpoIcon";
 import { GeoPoint } from "../../shared/models/GeoPoint.model";
 import { ChallengeDto } from "../../shared/types/dto/challenges/Challenge.dto";
+import { ProximityNotificationDto } from "../../shared/types/dto/notifications/ProximityNotification.dto";
 import { TripDto } from "../../shared/types/dto/trip/Trip.dto";
 import { DateUtils } from "../../shared/utils/date.utils";
 import { GeoUtils } from "../../shared/utils/geo.utils";
@@ -139,6 +140,12 @@ export class Trip {
     this.dto.traveledRoute = val.map((p) => p.toDto());
   }
 
+  get lastTraveledPoint(): GeoPoint | undefined {
+    return this.traveledRoute.length > 0
+      ? this.traveledRoute[this.traveledRoute.length - 1]
+      : undefined;
+  }
+
   get nbStepsReached() {
     return this.steps.filter((s) => !!s.reach).length;
   }
@@ -169,6 +176,10 @@ export class Trip {
     return distance;
   }
 
+  get hasUnlockProximityNotification() {
+    return !!this.getActualProximityNotificationStep();
+  }
+
   get started() {
     return this.status !== "new";
   }
@@ -197,12 +208,20 @@ export class Trip {
     return DateUtils.diffInMinute(nextStepDate, now);
   }
 
-  getActualProximityNotification(): Step | undefined {
+  getActualProximityNotificationStep(): Step | undefined {
     for (let i = this.steps.length - 1; i >= 0; i--) {
       const step = this.steps[i];
       if (step.type === "proximity-notification" && !!step.reach) {
         return step;
       }
+    }
+    return;
+  }
+
+  getActualProximityNotificationRange(): number | undefined {
+    const step = this.getActualProximityNotificationStep();
+    if (step) {
+      return (step.dto as ProximityNotificationDto).range;
     }
     return;
   }

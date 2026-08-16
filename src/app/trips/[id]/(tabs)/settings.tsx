@@ -6,11 +6,13 @@ import ExpoIcon from "../../../../components/common/icons/ExpoIcon";
 import LoadingPage from "../../../../components/common/misc/LoadingPage";
 import { colors } from "../../../../constants/style/colors";
 import { ToastContext } from "../../../../contexts/contexts";
+import useNotifications from "../../../../hooks/common/use-notifications";
 import useUserLocation from "../../../../hooks/common/use-user-location";
 import useArchivedTrips from "../../../../hooks/features/trip/useArchivedTrips";
 import useTripRepository from "../../../../hooks/features/trip/useTripRepository";
 import { GeoPoint } from "../../../../shared/models/GeoPoint.model";
 import { DateUtils } from "../../../../shared/utils/date.utils";
+import { GeoUtils } from "../../../../shared/utils/geo.utils";
 
 export default function TripSettingTab() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -19,13 +21,14 @@ export default function TripSettingTab() {
   const { archiveTrip } = useArchivedTrips();
   const { showToast } = useContext(ToastContext);
   const { userLocationLoading, getLocation } = useUserLocation();
+  const { schedulePushNotification } = useNotifications();
 
   if (!!!trip) {
     return <LoadingPage></LoadingPage>;
   }
 
-  const _addingCurrentPosInTrip = (label?: string) => {
-    getLocation().then((res) => {
+  const _addingCurrentPosInTrip = async (label?: string) => {
+    await getLocation().then((res) => {
       if (!!res) {
         trip.addPointInTraveledRoute(
           new GeoPoint({
@@ -132,9 +135,53 @@ export default function TripSettingTab() {
     );
   };
 
-  const handleAddingCurrentPosition = () => {
+  const handleAddingCurrentPosition = async () => {
     if (!!userLocationLoading) return;
-    _addingCurrentPosInTrip();
+    await _addingCurrentPosInTrip();
+    router.push({
+      pathname: "/trips/[id]/map",
+      params: { id: trip.id },
+    });
+    showToast({
+      message: "Position actuelle sauvegardée sur la carte !",
+      bgColor: colors.green[500],
+      duration: 3000,
+    });
+  };
+
+  const handleCheckingProximityNotification = async () => {
+    const range = trip.getActualProximityNotificationRange();
+    if (!!userLocationLoading || !!!range) {
+      return;
+    }
+    await getLocation().then((res) => {
+      if (!!res) {
+        const distance = GeoUtils.getDistanceBetween(
+          new GeoPoint({ lat: res.coords.latitude, lon: res.coords.longitude }),
+          new GeoPoint(trip.endingPos),
+        );
+        if (distance <= range) {
+          schedulePushNotification({
+            content: {
+              title: "Notification de Proximité",
+              body: `Vous êtes dans une zone de ${range}km autour du point d'arrivée !`,
+            },
+            delayInSecond: 1,
+          });
+          showToast({
+            message: `Vous êtes dans une zone de ${range}km autour du point d'arrivée !`,
+            bgColor: colors.green[500],
+            duration: 3000,
+          });
+        } else {
+          showToast({
+            message: `Vous êtes à plus de ${range}km du point d'arrivée !`,
+            bgColor: colors.red[500],
+            duration: 3000,
+          });
+        }
+      }
+    });
   };
 
   const handleAbandonTrip = () => {
@@ -206,10 +253,7 @@ export default function TripSettingTab() {
     });
   };
 
-  //TODO: ajouter toast quand ajoute position actuelle
   //TODO: verif notif proximite -> si dans rayon envoie une notification
-  //TODO: ajouter une methode dans trip "priximityNotificationEnabled" qui verifie si les notifications de proximite sont activée
-  //TODO: ajouter une methode dans trip qui renvoie la range de la notification de proximite current
 
   return (
     <View style={{ flex: 1 }}>
@@ -247,7 +291,7 @@ export default function TripSettingTab() {
               onPress={handleAddingCurrentPosition}
             ></OutlineButton>
           )}
-          {!trip.ended && (
+          {!trip.ended && !!trip.hasUnlockProximityNotification && (
             <OutlineButton
               content="Vérifier Notification Proximité"
               style={{ opacity: userLocationLoading ? 0.5 : 1 }}
@@ -258,7 +302,7 @@ export default function TripSettingTab() {
                   <ExpoIcon name="notifications-active" size={20}></ExpoIcon>
                 )
               }
-              onPress={handleAddingCurrentPosition}
+              onPress={handleCheckingProximityNotification}
             ></OutlineButton>
           )}
           {!trip.ended && (

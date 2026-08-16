@@ -21,8 +21,6 @@ export default function TripMapTab() {
     return <LoadingPage></LoadingPage>;
   }
 
-  console.log(trip.traveledRoute);
-
   /**
    * Get the current location of the user and adding it in trip
    */
@@ -45,10 +43,17 @@ export default function TripMapTab() {
   return (
     <View style={{ flex: 1 }}>
       <LeafletMap
-        defaultPos={{
-          latitude: trip.startingPos.lat,
-          longitude: trip.startingPos.lon,
-        }}
+        defaultPos={
+          !!trip.lastTraveledPoint
+            ? {
+                latitude: trip.lastTraveledPoint.lat,
+                longitude: trip.lastTraveledPoint.lon,
+              }
+            : {
+                latitude: trip.startingPos.lat,
+                longitude: trip.startingPos.lon,
+              }
+        }
         putMarkerAtStartingCenter={false}
         mapMarkers={[
           ...ArrayUtils.itemOrVoid({

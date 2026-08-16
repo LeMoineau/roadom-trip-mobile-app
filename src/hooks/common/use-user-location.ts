@@ -22,7 +22,6 @@ export default function useUserLocation() {
     setUserLocationLoading(true);
     const res = await _requestUserLocation()
       .then((res) => {
-        console.log("user location: ", res);
         return res;
       })
       .finally(() => {

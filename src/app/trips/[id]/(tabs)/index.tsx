@@ -90,7 +90,7 @@ export default function TripPage() {
           ></DescriptionSection>
           <Divider style={{ marginTop: 5 }}></Divider>
           <ProximityNotificationItem
-            currentProximityNotif={trip.getActualProximityNotification()}
+            currentProximityNotif={trip.getActualProximityNotificationStep()}
           ></ProximityNotificationItem>
           <Divider style={{ marginBottom: 10 }}></Divider>
           <MapTimeline
