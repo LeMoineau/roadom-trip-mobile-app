@@ -3,7 +3,7 @@ import { colors } from "../../../constants/style/colors";
 import { Step } from "../../../models/features/step.model";
 import { DateUtils } from "../../../shared/utils/date.utils";
 import ExpoIcon from "../../common/icons/ExpoIcon";
-import Divider from "../../common/misc/Divider";
+import Divider from "../../common/text/Divider";
 
 export function NextStepAvailableItem({
   step,

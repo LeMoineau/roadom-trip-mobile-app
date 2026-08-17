@@ -1,8 +1,8 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../../../constants/style/colors";
 import { Trip } from "../../../models/features/trip.model";
-import Divider from "../../common/misc/Divider";
 import MapTimeline from "../../common/misc/MapTimeline";
+import Divider from "../../common/text/Divider";
 import NextStepDelayItem from "./NextStepDelayItem";
 
 export default function TripPreviewItem({

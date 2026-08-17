@@ -2,7 +2,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../../../constants/style/colors";
 import { Step } from "../../../models/features/step.model";
 import ExpoIcon from "../../common/icons/ExpoIcon";
-import Divider from "../../common/misc/Divider";
+import Divider from "../../common/text/Divider";
 
 export default function StepItem({
   step,

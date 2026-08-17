@@ -7,7 +7,6 @@ import ExpoIcon from "../components/common/icons/ExpoIcon";
 import NoTripYetItem from "../components/common/items/NoTripYetItem";
 import TripPreviewItem from "../components/features/index/TripPreviewItem";
 import { colors } from "../constants/style/colors";
-import useNotifications from "../hooks/common/use-notifications";
 import { useTripStore } from "../stores/features/trip/trip.store";
 
 //TODO: retirer bouton Test
@@ -15,8 +14,6 @@ import { useTripStore } from "../stores/features/trip/trip.store";
 export default function Index() {
   const [refreshing, setRefreshing] = useState(false);
   const trip = useTripStore((state) => state.trip);
-  const { schedulePushNotification, sendPushNotification, expoPushToken } =
-    useNotifications();
 
   const handlePageRefresh = () => {
     setRefreshing(true);

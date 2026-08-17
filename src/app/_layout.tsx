@@ -1,14 +1,10 @@
 import * as Notifications from "expo-notifications";
-import { Stack } from "expo-router";
-import * as TaskManager from "expo-task-manager";
+import { router, Stack } from "expo-router";
+import { Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { storageKeys } from "../config/storage-keys";
+import ExpoIcon from "../components/common/icons/ExpoIcon";
 import { colors } from "../constants/style/colors";
 import ToastProvider from "../contexts/ToastProvider";
-import useStorage from "../hooks/common/use-storage";
-
-const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
-const { saveJson } = useStorage();
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -18,24 +14,6 @@ Notifications.setNotificationHandler({
     shouldShowList: true,
   }),
 });
-
-TaskManager.defineTask<Notifications.NotificationTaskPayload>(
-  BACKGROUND_NOTIFICATION_TASK,
-  async ({ data }) => {
-    saveJson(storageKeys.NOTIFICATION_TEST, {
-      ...data,
-      receivedDate: new Date().toString(),
-    });
-    if (
-      !("actionIdentifier" in data) && //n'est pas une notification de réponse
-      data.data.body &&
-      typeof data.data.body === "string"
-    ) {
-    }
-  },
-);
-
-Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
 
 //TODO: continuer d'investiguer pour les notifications en background
 
@@ -55,16 +33,16 @@ export default function RootLayout() {
             name="index"
             options={{
               headerTitle: "AléaCarta",
-              // headerLeft: () => (
-              //   <Pressable
-              //     onPress={() => {
-              //       router.push("/settings");
-              //     }}
-              //     style={{ marginRight: 20 }}
-              //   >
-              //     <Ionicons name="menu-sharp" size={23}></Ionicons>
-              //   </Pressable>
-              // ),
+              headerLeft: () => (
+                <Pressable
+                  onPress={() => {
+                    router.push("/settings");
+                  }}
+                  style={{ marginRight: 20 }}
+                >
+                  <ExpoIcon name="menu-sharp" size={23}></ExpoIcon>
+                </Pressable>
+              ),
             }}
           />
           <Stack.Screen

@@ -6,7 +6,7 @@ import TagItem from "../../../../components/common/items/TagItem";
 import DescriptionSection, {
   DescriptionSectionItem,
 } from "../../../../components/common/misc/DescriptionSection";
-import Divider from "../../../../components/common/misc/Divider";
+import Divider from "../../../../components/common/text/Divider";
 import StepMatcher from "../../../../components/features/step/StepMatcher";
 import { colors } from "../../../../constants/style/colors";
 import useTripRepository from "../../../../hooks/features/trip/useTripRepository";

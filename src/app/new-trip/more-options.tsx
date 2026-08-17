@@ -1,8 +1,9 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import FloatingButton from "../../components/common/buttons/FloatingButton";
 import OutlineButton from "../../components/common/buttons/OutlineButton";
+import RadioButton from "../../components/common/buttons/RadioButton";
 import ExpoIcon from "../../components/common/icons/ExpoIcon";
 import { colors } from "../../constants/style/colors";
 import { useNewTripConfigStore } from "../../stores/features/new-trip/new-trip-config.store";
@@ -13,6 +14,7 @@ export default function MoreOptionsPage() {
   }>();
 
   const { distanceMin, updateDistance } = useNewTripConfigStore();
+  const [onlyInFR, setOnltyInFr] = useState(true);
 
   useEffect(() => {
     if (!!paramDistanceMin) {
@@ -57,27 +59,33 @@ export default function MoreOptionsPage() {
         style={{
           flex: 1,
           width: "100%",
-          gap: 20,
         }}
       >
-        <OutlineButton
-          content={distanceMin ? `${distanceMin} km` : "Distance min"}
-          prependIcon={
-            <ExpoIcon
-              name="remove-road"
-              size={20}
-              style={{
-                color: distanceMin ? colors.black : colors.gray[500],
-              }}
-            ></ExpoIcon>
-          }
-          appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
-          textStyle={{
-            color: distanceMin ? colors.black : colors.gray[500],
-          }}
-          onPress={handlePressingDistanceMinBtn}
-        ></OutlineButton>
-        <View style={{ height: 150 }}></View>
+        <View style={{ flex: 1, gap: 20, width: "100%" }}>
+          <OutlineButton
+            content={distanceMin ? `${distanceMin} km` : "Distance min"}
+            prependIcon={
+              <ExpoIcon
+                name="remove-road"
+                size={20}
+                style={{
+                  color: distanceMin ? colors.black : colors.gray[500],
+                }}
+              ></ExpoIcon>
+            }
+            appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
+            textStyle={{
+              color: distanceMin ? colors.black : colors.gray[500],
+            }}
+            onPress={handlePressingDistanceMinBtn}
+          ></OutlineButton>
+          <RadioButton
+            content="Point d'arrivée en France"
+            checked={onlyInFR}
+            onPress={() => setOnltyInFr(!onlyInFR)}
+          ></RadioButton>
+          <View style={{ height: 150 }}></View>
+        </View>
       </ScrollView>
       <FloatingButton
         content="Valider"
