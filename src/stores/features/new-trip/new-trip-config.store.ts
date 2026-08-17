@@ -5,7 +5,7 @@ const DEFAULT_STATE: State = {
   startingPos: undefined, // new GeoPoint({ lat: 48, lon: 5 }),
   endingPos: undefined,
   userLocation: undefined,
-  distanceMax: 600,
+  distanceMax: undefined,
   distanceMin: undefined,
 };
 
@@ -26,7 +26,7 @@ type Action = {
     endingPos: State["endingPos"],
     userLocation?: State["userLocation"],
   ) => void;
-  updateDistance: (distance: number, type: "max" | "min") => void;
+  updateDistance: (type: "max" | "min", distance?: number) => void;
   reset: () => void;
 };
 
@@ -59,7 +59,7 @@ export const useNewTripConfigStore = create<State & Action>((set) => {
      * @param distance
      * @param type
      */
-    updateDistance: (distance, type) => {
+    updateDistance: (type, distance) => {
       if (type === "max") set({ distanceMax: distance });
       else set({ distanceMin: distance });
     },

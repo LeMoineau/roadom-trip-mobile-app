@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
-import { RefreshControl, ScrollView, Text, View } from "react-native";
+import { Alert, RefreshControl, ScrollView, Text, View } from "react-native";
 import { AllIconNames } from "../../../../components/common/icons/ExpoIcon";
 import NoMoreStepItem from "../../../../components/common/items/NoMoreStepItem";
 import ProximityNotificationItem from "../../../../components/common/items/ProximityNotificationItem";
@@ -171,12 +171,83 @@ export default function TripPage() {
                     ),
                   },
               ),
+              ...trip.steps
+                .filter((s) => !!!s.reach && trip.getNextStep()?.id !== s.id)
+                .map((s) => ({
+                  desc: (
+                    <StepItem
+                      step={s}
+                      blured={true}
+                      onPress={() => {
+                        Alert.alert(
+                          `Disponible dans ${s.availableInHumanReadable}`,
+                          `Cette étape sera disponible à partir de ${DateUtils.toHHmmDDMMYY(new Date(s.availableAt))}`,
+                        );
+                      }}
+                    ></StepItem>
+                  ),
+                })),
+              {
+                desc: (
+                  <View style={{ marginTop: -5 }}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        fontWeight: 600,
+                        color: colors.gray[800],
+                      }}
+                    >
+                      {trip.displayOsmEndingDetailsTitle}
+                    </Text>
+                    <Text style={{ color: colors.gray[600], fontSize: 12 }}>
+                      ???, ???
+                    </Text>
+                  </View>
+                ),
+              },
             ]}
           ></MapTimeline>
           {!!!trip.getNextStep() && <NoMoreStepItem></NoMoreStepItem>}
           <View style={{ height: 150 }}></View>
         </View>
       </ScrollView>
+      <View
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          padding: 20,
+          width: "100%",
+          backgroundColor: colors.white,
+          borderTopWidth: 1,
+          borderTopColor: colors.gray[200],
+        }}
+      >
+        <MapTimeline
+          spaceBetweenEachDots={30}
+          dots={[
+            {
+              icon: "flag-checkered",
+              desc: (
+                <View style={{ marginTop: -5 }}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 600,
+                      color: colors.gray[800],
+                    }}
+                  >
+                    {trip.displayOsmEndingDetailsTitle}
+                  </Text>
+                  <Text style={{ color: colors.gray[600], fontSize: 12 }}>
+                    ???, ???
+                  </Text>
+                </View>
+              ),
+            },
+          ]}
+        ></MapTimeline>
+      </View>
     </View>
   );
 }

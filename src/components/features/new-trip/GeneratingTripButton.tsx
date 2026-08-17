@@ -16,7 +16,7 @@ export default function GeneratingTripButton({
 }: {
   activated?: boolean;
   loading?: boolean;
-  onPress?: () => Promise<void>;
+  onPress?: (activated?: boolean) => Promise<void>;
 }) {
   return (
     <FloatingButton
@@ -34,9 +34,8 @@ export default function GeneratingTripButton({
         )
       }
       onPress={() => {
-        if (!activated) return;
         if (!!onPress) {
-          onPress();
+          onPress(activated);
         }
       }}
     ></FloatingButton>

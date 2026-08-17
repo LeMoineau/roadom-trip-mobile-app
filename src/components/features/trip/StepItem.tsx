@@ -6,9 +6,11 @@ import Divider from "../../common/misc/Divider";
 
 export default function StepItem({
   step,
+  blured,
   onPress,
 }: {
   step: Step;
+  blured?: boolean;
   onPress?: () => void;
 }) {
   return (
@@ -29,28 +31,40 @@ export default function StepItem({
       onPress={() => {
         onPress && onPress();
       }}
+      activeOpacity={!blured ? 0.5 : 1}
     >
-      <View style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <Text style={{ fontWeight: 600 }}>{step.name}</Text>
-        <Text style={{ fontSize: 12 }}>{step.stepType}</Text>
-      </View>
-      <Divider style={{ width: "100%" }}></Divider>
       <View
         style={{
           flex: 1,
           display: "flex",
-          flexDirection: "row",
-          justifyContent: "flex-end",
-          alignItems: "flex-end",
-          gap: 10,
-          width: "100%",
+          flexDirection: "column",
+          filter: blured ? "blur(5)" : undefined,
         }}
       >
-        <Text style={{ color: colors.gray[800], fontWeight: "600" }}>
-          Voir plus
-        </Text>
-        <ExpoIcon name="chevron-forward" size={20}></ExpoIcon>
+        <Text style={{ fontWeight: 600 }}>{step.name}</Text>
+        <Text style={{ fontSize: 12 }}>{step.stepType}</Text>
       </View>
+      {!blured && (
+        <>
+          <Divider style={{ width: "100%" }}></Divider>
+          <View
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              alignItems: "flex-end",
+              gap: 10,
+              width: "100%",
+            }}
+          >
+            <Text style={{ color: colors.gray[800], fontWeight: "600" }}>
+              Voir plus
+            </Text>
+            <ExpoIcon name="chevron-forward" size={20}></ExpoIcon>
+          </View>
+        </>
+      )}
     </TouchableOpacity>
   );
 }

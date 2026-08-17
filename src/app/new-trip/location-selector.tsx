@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { RelativePathString, router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,24 +10,27 @@ import { colors } from "../../constants/style/colors";
 import useUserLocation from "../../hooks/common/use-user-location";
 import osmService from "../../services/osm.service";
 import { GeoPoint } from "../../shared/models/GeoPoint.model";
+import { GeoPointDto } from "../../shared/types/dto/geo/GeoPoint.dto";
 import { OSMSearchResponse } from "../../shared/types/osm/OSMSearchResponse";
-import { useNewTripConfigStore } from "../../stores/features/new-trip/new-trip-config.store";
 
+/**
+ * Take severals query param to return a GeoPointDto from the user
+ * @param defaultPos default position on the map
+ * @param posValueKey key of the wanted returned query param which will contain the user selected position
+ * @param callbackUrl callback url where send result query param
+ * @param resetable to define if the position can be removed. It will return the string value "null" if the position is reset
+ */
 export default function LocationSelectorPage() {
-  const { currentPos, posType, resetable } = useLocalSearchParams<{
-    currentPos?: string;
-    posType?: "starting" | "ending";
-    resetable?: string;
-  }>();
+  const { defaultPos, posValueKey, callbackUrl, resetable } =
+    useLocalSearchParams<{
+      defaultPos?: string;
+      posValueKey: string;
+      callbackUrl: string;
+      resetable?: string;
+    }>();
   const inputRef = useRef<TextInput>(null);
   const [selectedPos, setSelectedPos] = useState<[number, number]>();
   const [selectedPosName, setSelectedPosName] = useState<string>();
-  const updateStartingPos = useNewTripConfigStore(
-    (state) => state.updateStartingPos,
-  );
-  const updateEndingPos = useNewTripConfigStore(
-    (state) => state.updateEndingPos,
-  );
   const { userLocationLoading, getLocation } = useUserLocation();
   const [queryLoading, setQueryLoading] = useState(false);
 
@@ -38,13 +41,16 @@ export default function LocationSelectorPage() {
     if (!!userLocationLoading) return;
     getLocation()
       .then((res) => {
-        _updatePosition({
+        const resPt = new GeoPoint({
           lat: res.coords.latitude,
           lon: res.coords.longitude,
           label: "Votre position géolocalisée",
         });
         router.dismissTo({
-          pathname: "/new-trip",
+          pathname: callbackUrl as RelativePathString,
+          params: {
+            [posValueKey]: JSON.stringify(resPt.toDto()),
+          },
         });
       })
       .catch((err) => {
@@ -57,9 +63,15 @@ export default function LocationSelectorPage() {
    */
   const handleSendingSelectedPosition = () => {
     if (!selectedPos) return;
-    _updatePosition({ lat: selectedPos[0], lon: selectedPos[1] });
+    const resPt = new GeoPoint({
+      lat: selectedPos[0],
+      lon: selectedPos[1],
+    });
     router.dismissTo({
-      pathname: "/new-trip",
+      pathname: callbackUrl as RelativePathString,
+      params: {
+        [posValueKey]: JSON.stringify(resPt.toDto()),
+      },
     });
   };
 
@@ -67,9 +79,11 @@ export default function LocationSelectorPage() {
    * Reset the selected position and redirect to new-trip index
    */
   const handleSendingResetedPosition = () => {
-    _updatePosition({});
     router.dismissTo({
-      pathname: "/new-trip",
+      pathname: callbackUrl as RelativePathString,
+      params: {
+        [posValueKey]: "null",
+      },
     });
   };
 
@@ -84,68 +98,20 @@ export default function LocationSelectorPage() {
     }
   };
 
-  const _updatePosition = ({
-    lat,
-    lon,
-    label,
-    userLocation,
-  }: {
-    lat?: number;
-    lon?: number;
-    label?: string;
-    userLocation?: boolean;
-  }) => {
-    const newPos =
-      lat && lon
-        ? new GeoPoint({
-            lat,
-            lon,
-            label:
-              selectedPosName ??
-              label ??
-              (posType === "ending" ? "Arrivée" : "Départ"),
-          }).toDto()
-        : undefined;
-    if (posType === "ending") {
-      updateEndingPos(newPos, userLocation);
-    } else {
-      updateStartingPos(newPos, userLocation);
-    }
-  };
-
-  const _parseCurrentPosParam = (): [number, number] | undefined => {
-    if (!currentPos) return;
-    try {
-      const parsedPos = JSON.parse(currentPos);
-      if (parsedPos && Array.isArray(parsedPos) && parsedPos.length >= 2) {
-        try {
-          return [parseFloat(parsedPos[0]), parseFloat(parsedPos[1])];
-        } catch (err) {
-          console.error(
-            `error during converting current pos ${parsedPos} into [number, number]`,
-            err,
-          );
-        }
-      }
-    } catch (err) {
-      console.error(
-        `error during converting current pos ${currentPos} into array`,
-        err,
-      );
-    }
-  };
-
   /**
    * Check if the actuel selected pos is the same as the position pass through params (so the
    * previously saved position)
    */
   const _actualSelectedPosIsParamPos = () => {
-    if (!!!selectedPos) return false;
-    const _currentPos = _parseCurrentPosParam();
-    if (!!!_currentPos) return false;
-    return (
-      _currentPos[0] === selectedPos[0] && _currentPos[1] === selectedPos[1]
-    );
+    if (!!!selectedPos || !!!defaultPos) return false;
+    try {
+      const _defaultPos = JSON.parse(defaultPos) as GeoPointDto;
+      return (
+        _defaultPos.lat === selectedPos[0] && _defaultPos.lon === selectedPos[1]
+      );
+    } catch (err) {
+      return false;
+    }
   };
 
   /**
@@ -159,11 +125,17 @@ export default function LocationSelectorPage() {
    * Get previously selected pos if exists from url params
    */
   useEffect(() => {
-    const _currentPos = _parseCurrentPosParam();
-    if (!!_currentPos) {
-      setSelectedPos(_currentPos);
+    try {
+      if (!!defaultPos) {
+        const parsedDefaultPos = JSON.parse(defaultPos) as GeoPointDto;
+        setSelectedPos([parsedDefaultPos.lat, parsedDefaultPos.lon]);
+      }
+    } catch (err) {
+      console.error(
+        `error during parsing of defaultPos "${defaultPos}" of location selector`,
+      );
     }
-  }, [currentPos]);
+  }, [defaultPos]);
 
   return (
     <SafeAreaView edges={{ top: "off" }} style={{ flex: 1 }}>
@@ -246,7 +218,7 @@ export default function LocationSelectorPage() {
             content={"Annuler la sélection"}
             appendIcon={
               <ExpoIcon
-                name={"cancel"}
+                name={"close"}
                 size={20}
                 style={{ color: colors.white }}
               ></ExpoIcon>

@@ -1,6 +1,6 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useContext, useEffect } from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import OutlineButton from "../../components/common/buttons/OutlineButton";
 import ExpoIcon from "../../components/common/icons/ExpoIcon";
 import GeneratingTripButton from "../../components/features/new-trip/GeneratingTripButton";
@@ -12,12 +12,26 @@ import { useNewTripConfigStore } from "../../stores/features/new-trip/new-trip-c
 import { useTripStore } from "../../stores/features/trip/trip.store";
 
 export default function NewTripPage() {
-  const startingPos = useNewTripConfigStore((state) => state.startingPos);
-  const endingPos = useNewTripConfigStore((state) => state.endingPos);
-  const userLocation = useNewTripConfigStore((state) => state.userLocation);
-  const distanceMax = useNewTripConfigStore((state) => state.distanceMax);
-  const distanceMin = useNewTripConfigStore((state) => state.distanceMin);
-  const resetNewTripStore = useNewTripConfigStore((state) => state.reset);
+  const {
+    startingPos: paramStartingPos,
+    endingPos: paramEndingPos,
+    distanceMax: paramDistanceMax,
+  } = useLocalSearchParams<{
+    startingPos?: string;
+    endingPos?: string;
+    distanceMax?: string;
+  }>();
+
+  const {
+    startingPos,
+    endingPos,
+    distanceMax,
+    distanceMin,
+    reset,
+    updateDistance,
+    updateEndingPos,
+    updateStartingPos,
+  } = useNewTripConfigStore();
   const { showToast } = useContext(ToastContext);
 
   const { loading, trip: beingCreatedTrip, error, createTrip } = useTripApi();
@@ -25,15 +39,26 @@ export default function NewTripPage() {
   const updateTrip = useTripStore((state) => state.updateTrip);
   const trip = useTripStore((state) => state.trip);
 
-  const handleCreatingNewTrip = async () => {
-    if (!startingPos || !distanceMax) return;
-    createTrip({
-      startingPos,
-      endingPos,
-      distanceMax,
-      distanceMin,
-    });
-  };
+  useEffect(() => {
+    if (!!paramStartingPos) updateStartingPos(JSON.parse(paramStartingPos));
+  }, [paramStartingPos]);
+
+  useEffect(() => {
+    if (!!paramEndingPos) {
+      updateEndingPos(
+        paramEndingPos !== "null" ? JSON.parse(paramEndingPos) : undefined,
+      );
+    }
+  }, [paramEndingPos]);
+
+  useEffect(() => {
+    if (!!paramDistanceMax) {
+      updateDistance(
+        "max",
+        paramDistanceMax !== "null" ? parseInt(paramDistanceMax) : undefined,
+      );
+    }
+  }, [paramDistanceMax]);
 
   useEffect(() => {
     if (!!beingCreatedTrip) {
@@ -42,7 +67,7 @@ export default function NewTripPage() {
         archiveTrip(trip);
       }
       updateTrip(beingCreatedTrip);
-      resetNewTripStore();
+      reset();
       router.dismissTo({
         pathname: "..",
         params: { newTripCreated: beingCreatedTrip.id },
@@ -66,16 +91,118 @@ export default function NewTripPage() {
     }
   }, [error]);
 
+  const handlePressingStartingPosBtn = () => {
+    router.push({
+      pathname: "/new-trip/location-selector",
+      params: {
+        defaultPos: startingPos ? JSON.stringify(startingPos) : undefined,
+        posValueKey: "startingPos",
+        callbackUrl: "/new-trip",
+      },
+    });
+  };
+
+  const handlePressingEndingPosBtn = () => {
+    const _redirect = () => {
+      router.push({
+        pathname: "/new-trip/location-selector",
+        params: {
+          defaultPos: endingPos ? JSON.stringify(endingPos) : undefined,
+          posValueKey: "endingPos",
+          callbackUrl: "/new-trip",
+          resetable: "true",
+        },
+      });
+    };
+    if (!!!distanceMax) {
+      _redirect();
+    } else {
+      Alert.alert(
+        "Destination du Road-Trip",
+        "Vous avez déjà renseigné une distance maximale pour ce road-trip. Voulez-vous quand même indiquer aussi une point d'arrivée (la distance maximale sera ignorée) ?",
+        [
+          {
+            text: "Non",
+            style: "cancel",
+          },
+          {
+            text: "Oui",
+            onPress: _redirect,
+          },
+        ],
+      );
+    }
+  };
+
+  const handlePressingDistanceMaxBtn = () => {
+    const _redirect = () => {
+      router.push({
+        pathname: "/new-trip/distance-selector",
+        params: {
+          defaultValue: distanceMax,
+          callbackUrl: "/new-trip",
+          valueKey: "distanceMax",
+          displayTitle:
+            "Combien de km êtes-vous prêt à parcourir pour cette aventure ?",
+        },
+      });
+    };
+    if (!!!endingPos) {
+      _redirect();
+    } else {
+      Alert.alert(
+        "Destination du Road-Trip",
+        "Vous avez déjà renseigné un point d'arrivée pour ce road-trip. Voulez-vous quand même indiquer aussi une distance maximale (elle ne sera pas prise en compte) ?",
+        [
+          {
+            text: "Non",
+            style: "cancel",
+          },
+          {
+            text: "Oui",
+            onPress: _redirect,
+          },
+        ],
+      );
+    }
+  };
+
+  const handlePressingMoreOptionsBtn = () => {
+    router.push({
+      pathname: "/new-trip/more-options",
+      params: { distanceMin },
+    });
+  };
+
+  const handleSubmit = async (activated?: boolean) => {
+    if (!startingPos || !distanceMax || !!!activated) {
+      showToast({
+        message:
+          "Veuillez renseigner au moins le point de départ et la distance maximale",
+        bgColor: colors.red[500],
+        duration: 3000,
+      });
+      return;
+    }
+    try {
+      createTrip({
+        startingPos,
+        endingPos,
+        distanceMax,
+        distanceMin,
+      });
+    } catch (err) {
+      console.error("error during parsing creation trip params");
+    }
+  };
+
   return (
     <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 20, gap: 20 }}>
       <OutlineButton
-        content={
-          startingPos?.label ??
-          (userLocation ? "Votre position actuelle" : "Départ")
-        }
+        content={startingPos?.label ?? "Départ"}
         prependIcon={
           <ExpoIcon
-            name="circle-o"
+            name={startingPos ? "check-circle-o" : "circle-o"}
             size={20}
             style={{
               color: startingPos ? colors.black : colors.gray[500],
@@ -86,48 +213,25 @@ export default function NewTripPage() {
         textStyle={{
           color: startingPos ? colors.black : colors.gray[500],
         }}
-        onPress={() => {
-          router.push({
-            pathname: "/new-trip/location-selector",
-            params: {
-              currentPos: startingPos
-                ? `[${startingPos.lat}, ${startingPos.lon}]`
-                : undefined,
-              posType: "starting",
-            },
-          });
-        }}
+        onPress={handlePressingStartingPosBtn}
       ></OutlineButton>
       <OutlineButton
-        content={
-          endingPos?.label ??
-          (userLocation ? "Votre position actuelle" : "Arrivée")
-        }
+        content={endingPos?.label ?? "Arrivée"}
         prependIcon={
           <ExpoIcon
-            name="circle-o"
+            name={endingPos ? "check-circle-o" : "circle-o"}
             size={20}
             style={{
               color: endingPos ? colors.black : colors.gray[500],
             }}
           ></ExpoIcon>
         }
+        style={{ opacity: !!distanceMax && !!!endingPos ? 0.5 : 1 }}
         appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
         textStyle={{
           color: endingPos ? colors.black : colors.gray[500],
         }}
-        onPress={() => {
-          router.push({
-            pathname: "/new-trip/location-selector",
-            params: {
-              currentPos: endingPos
-                ? `[${endingPos.lat}, ${endingPos.lon}]`
-                : undefined,
-              posType: "ending",
-              resetable: "true",
-            },
-          });
-        }}
+        onPress={handlePressingEndingPosBtn}
       ></OutlineButton>
       <OutlineButton
         content={distanceMax ? `${distanceMax} km` : "Distance max"}
@@ -140,49 +244,29 @@ export default function NewTripPage() {
             }}
           ></ExpoIcon>
         }
+        style={{ opacity: !!endingPos && !!!distanceMax ? 0.5 : 1 }}
         appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
         textStyle={{
           color: distanceMax ? colors.black : colors.gray[500],
         }}
-        onPress={() => {
-          router.push({
-            pathname: "/new-trip/distance-selector",
-            params: { type: "max", defaultValue: distanceMax },
-          });
-        }}
+        onPress={handlePressingDistanceMaxBtn}
       ></OutlineButton>
       <OutlineButton
-        content={distanceMin ? `${distanceMin} km` : "Distance min"}
-        prependIcon={
-          <ExpoIcon
-            name="remove-road"
-            size={20}
-            style={{
-              color: distanceMin ? colors.black : colors.gray[500],
-            }}
-          ></ExpoIcon>
-        }
+        content="Plus d'options"
         appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
-        textStyle={{
-          color: distanceMin ? colors.black : colors.gray[500],
-        }}
-        onPress={() => {
-          router.push({
-            pathname: "/new-trip/distance-selector",
-            params: { type: "min", defaultValue: distanceMin },
-          });
-        }}
+        onPress={handlePressingMoreOptionsBtn}
+        style={{ width: "100%" }}
       ></OutlineButton>
       <GeneratingTripButton
         activated={
           !!(
-            startingPos &&
-            distanceMax &&
-            (!distanceMin || distanceMin < distanceMax)
+            !!startingPos &&
+            (!!distanceMax || !!endingPos) &&
+            (!!!distanceMin || !!!distanceMax || distanceMin < distanceMax)
           )
         }
         loading={loading}
-        onPress={handleCreatingNewTrip}
+        onPress={handleSubmit}
       ></GeneratingTripButton>
     </View>
   );

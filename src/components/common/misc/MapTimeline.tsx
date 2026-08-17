@@ -1,7 +1,9 @@
 import { ColorValue, View } from "react-native";
 import { colors } from "../../../constants/style/colors";
+import ExpoIcon, { AllIconNames } from "../icons/ExpoIcon";
 
 interface MapTimelineDotProps {
+  icon?: AllIconNames;
   color?: ColorValue;
   desc?: React.ReactNode;
   last?: boolean;
@@ -20,6 +22,7 @@ interface MapTimelineSeparatorProps {
  * @returns
  */
 function MapTimelineDot({
+  icon,
   color = colors.gray[800],
   desc,
   last,
@@ -42,16 +45,20 @@ function MapTimelineDot({
           alignItems: "center",
         }}
       >
-        <View
-          style={{
-            backgroundColor: colors.white,
-            borderRadius: 20,
-            width: 15,
-            height: 15,
-            borderWidth: 3,
-            borderColor: color,
-          }}
-        ></View>
+        {icon ? (
+          <ExpoIcon name={icon} size={15}></ExpoIcon>
+        ) : (
+          <View
+            style={{
+              backgroundColor: colors.white,
+              borderRadius: 20,
+              width: 15,
+              height: 15,
+              borderWidth: 3,
+              borderColor: color,
+            }}
+          ></View>
+        )}
         {!last && (
           <View
             style={{

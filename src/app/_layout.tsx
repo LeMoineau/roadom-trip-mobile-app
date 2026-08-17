@@ -1,8 +1,6 @@
-import { Ionicons } from "@expo/vector-icons";
 import * as Notifications from "expo-notifications";
-import { router, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import * as TaskManager from "expo-task-manager";
-import { Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { storageKeys } from "../config/storage-keys";
 import { colors } from "../constants/style/colors";
@@ -57,16 +55,16 @@ export default function RootLayout() {
             name="index"
             options={{
               headerTitle: "AléaCarta",
-              headerLeft: () => (
-                <Pressable
-                  onPress={() => {
-                    router.push("/settings");
-                  }}
-                  style={{ marginRight: 20 }}
-                >
-                  <Ionicons name="menu-sharp" size={23}></Ionicons>
-                </Pressable>
-              ),
+              // headerLeft: () => (
+              //   <Pressable
+              //     onPress={() => {
+              //       router.push("/settings");
+              //     }}
+              //     style={{ marginRight: 20 }}
+              //   >
+              //     <Ionicons name="menu-sharp" size={23}></Ionicons>
+              //   </Pressable>
+              // ),
             }}
           />
           <Stack.Screen
@@ -84,6 +82,13 @@ export default function RootLayout() {
             name="new-trip/distance-selector"
             options={{
               headerTitle: "Sélectionnez une distance",
+              headerShown: true,
+            }}
+          />
+          <Stack.Screen
+            name="new-trip/more-options"
+            options={{
+              headerTitle: "Plus d'options",
               headerShown: true,
             }}
           />
