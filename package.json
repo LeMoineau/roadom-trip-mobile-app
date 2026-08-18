@@ -11,7 +11,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "postinstall": "npx patch-package",
-    "build:apk": "EAS_SKIP_AUTO_FINGERPRINT=1 npx eas build -p android --profile preview",
+    "build:apk": "npx cross-env EAS_SKIP_AUTO_FINGERPRINT=1 eas build -p android --profile preview",
     "build:release": "npx eas build -p android --profile production",
     "build:web": "npx expo export -p web"
   },
