@@ -14,7 +14,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EAS_SKIP_AUTO_FINGERPRINT": "1"
+        "EXPO_PUBLIC_API_URL": "https://api.monsite.com"
       }
     },
     "production": {

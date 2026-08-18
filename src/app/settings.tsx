@@ -3,6 +3,7 @@ import { Alert, View } from "react-native";
 import OutlineButton from "../components/common/buttons/OutlineButton";
 import ExpoIcon from "../components/common/icons/ExpoIcon";
 import DividerTitle from "../components/common/text/DividerTitle";
+import config from "../config/config";
 import { storageKeys } from "../config/storage-keys";
 import { colors } from "../constants/style/colors";
 import { ToastContext } from "../contexts/contexts";
@@ -96,6 +97,10 @@ export default function SettingsPage() {
         content="Vider le stockage"
         onPress={handleClearStorage}
       ></OutlineButton>
+      <DividerTitle
+        title={`test env var: ${config.getEnv().test}`}
+        style={{ paddingTop: 20, paddingBottom: 0 }}
+      ></DividerTitle>
     </View>
   );
 }

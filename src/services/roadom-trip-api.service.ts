@@ -8,7 +8,8 @@ class RoadomTripApiService {
   instance: AxiosInstance;
 
   constructor() {
-    this.baseURL = config.getEnv().roadomTripApiURL;
+    this.baseURL =
+      config.getEnv().roadomTripApiURL ?? "https://aleacarta-api.vercel.app";
     this.instance = axios.create({
       baseURL: this.baseURL,
       headers: {
