@@ -84,6 +84,50 @@ export default function MoreOptionsPage() {
             checked={onlyInFR}
             onPress={() => setOnltyInFr(!onlyInFR)}
           ></RadioButton>
+          <RadioButton
+            content="Point d'arrivée possible dans l'eau"
+            checked={false}
+            onPress={() => setOnltyInFr(!onlyInFR)}
+          ></RadioButton>
+          <RadioButton
+            content="Afficher le nom de la ville d'arrivée"
+            checked={true}
+            onPress={() => setOnltyInFr(!onlyInFR)}
+          ></RadioButton>
+          <OutlineButton
+            content={distanceMin ? `${distanceMin} km` : "Temps entre indices"}
+            prependIcon={
+              <ExpoIcon
+                name="timer-outline"
+                size={20}
+                style={{
+                  color: distanceMin ? colors.black : colors.gray[500],
+                }}
+              ></ExpoIcon>
+            }
+            appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
+            textStyle={{
+              color: distanceMin ? colors.black : colors.gray[500],
+            }}
+            onPress={handlePressingDistanceMinBtn}
+          ></OutlineButton>
+          <OutlineButton
+            content={distanceMin ? `${distanceMin} km` : "Indices à exclure"}
+            prependIcon={
+              <ExpoIcon
+                name="linear-scale"
+                size={20}
+                style={{
+                  color: distanceMin ? colors.black : colors.gray[500],
+                }}
+              ></ExpoIcon>
+            }
+            appendIcon={<ExpoIcon name="chevron-forward" size={20}></ExpoIcon>}
+            textStyle={{
+              color: distanceMin ? colors.black : colors.gray[500],
+            }}
+            onPress={handlePressingDistanceMinBtn}
+          ></OutlineButton>
           <View style={{ height: 150 }}></View>
         </View>
       </ScrollView>

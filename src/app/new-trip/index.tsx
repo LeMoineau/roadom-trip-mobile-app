@@ -175,10 +175,10 @@ export default function NewTripPage() {
   };
 
   const handleSubmit = async (activated?: boolean) => {
-    if (!startingPos || !distanceMax || !!!activated) {
+    if (!!!startingPos || (!!!distanceMax && !!!endingPos) || !!!activated) {
       showToast({
         message:
-          "Veuillez renseigner au moins le point de départ et la distance maximale",
+          "Veuillez renseigner au moins le point de départ et la distance maximale ou le point d'arrivée",
         bgColor: colors.red[500],
         duration: 3000,
       });
@@ -259,11 +259,9 @@ export default function NewTripPage() {
       ></OutlineButton>
       <GeneratingTripButton
         activated={
-          !!(
-            !!startingPos &&
-            (!!distanceMax || !!endingPos) &&
-            (!!!distanceMin || !!!distanceMax || distanceMin < distanceMax)
-          )
+          !!startingPos &&
+          (!!distanceMax || !!endingPos) &&
+          (!!!distanceMin || !!!distanceMax || distanceMin < distanceMax)
         }
         loading={loading}
         onPress={handleSubmit}

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Alert, View } from "react-native";
 import OutlineButton from "../components/common/buttons/OutlineButton";
 import ExpoIcon from "../components/common/icons/ExpoIcon";
@@ -12,6 +12,11 @@ import useStorage from "../hooks/common/use-storage";
 export default function SettingsPage() {
   const { removeItem } = useStorage();
   const { showToast } = useContext(ToastContext);
+  const [devCounter, setDevCounter] = useState(0);
+
+  const envParamsCorrectlySet = !!config
+    .getEnv()
+    .roadomTripApiURL?.includes("vercel.app");
 
   const handleClearHistory = () => {
     Alert.alert(
@@ -97,10 +102,34 @@ export default function SettingsPage() {
         content="Vider le stockage"
         onPress={handleClearStorage}
       ></OutlineButton>
-      <DividerTitle
-        title={`test env var: ${config.getEnv().test}`}
-        style={{ paddingTop: 20, paddingBottom: 0 }}
-      ></DividerTitle>
+      {devCounter >= 5 && (
+        <>
+          <DividerTitle
+            title="Dev"
+            style={{ paddingTop: 20, paddingBottom: 0 }}
+          ></DividerTitle>
+          <OutlineButton
+            prependIcon={
+              <ExpoIcon
+                name={envParamsCorrectlySet ? "check" : "close"}
+                size={20}
+              ></ExpoIcon>
+            }
+            content={
+              envParamsCorrectlySet ? "Environnement prod" : "Environnement dev"
+            }
+            activeOpacity={1}
+          ></OutlineButton>
+        </>
+      )}
+      <OutlineButton
+        content="coucou"
+        style={{ opacity: 0 }}
+        activeOpacity={0}
+        onPress={() => {
+          setDevCounter((devCounter + 1) % 6);
+        }}
+      ></OutlineButton>
     </View>
   );
 }

@@ -11,7 +11,6 @@ import useUserLocation from "../../hooks/common/use-user-location";
 import osmService from "../../services/osm.service";
 import { GeoPoint } from "../../shared/models/GeoPoint.model";
 import { GeoPointDto } from "../../shared/types/dto/geo/GeoPoint.dto";
-import { OSMSearchResponse } from "../../shared/types/osm/OSMSearchResponse";
 
 /**
  * Take severals query param to return a GeoPointDto from the user
@@ -21,13 +20,20 @@ import { OSMSearchResponse } from "../../shared/types/osm/OSMSearchResponse";
  * @param resetable to define if the position can be removed. It will return the string value "null" if the position is reset
  */
 export default function LocationSelectorPage() {
-  const { defaultPos, posValueKey, callbackUrl, resetable } =
-    useLocalSearchParams<{
-      defaultPos?: string;
-      posValueKey: string;
-      callbackUrl: string;
-      resetable?: string;
-    }>();
+  const params = useLocalSearchParams();
+  const {
+    defaultPos,
+    posValueKey,
+    callbackUrl,
+    resetable,
+    searchLocationResponse,
+  } = useLocalSearchParams<{
+    defaultPos?: string;
+    posValueKey: string;
+    callbackUrl: string;
+    resetable?: string;
+    searchLocationResponse?: string;
+  }>();
   const inputRef = useRef<TextInput>(null);
   const [selectedPos, setSelectedPos] = useState<[number, number]>();
   const [selectedPosName, setSelectedPosName] = useState<string>();
@@ -66,6 +72,7 @@ export default function LocationSelectorPage() {
     const resPt = new GeoPoint({
       lat: selectedPos[0],
       lon: selectedPos[1],
+      label: selectedPosName,
     });
     router.dismissTo({
       pathname: callbackUrl as RelativePathString,
@@ -87,14 +94,44 @@ export default function LocationSelectorPage() {
     });
   };
 
-  const handleSearchResponse = (res?: OSMSearchResponse[]) => {
-    if (!!res && res.length > 0 && !!res[0].lat && !!res[0].lon) {
-      try {
-        setSelectedPos([parseFloat(res[0].lat), parseFloat(res[0].lon)]);
-        setSelectedPosName(res[0].display_name);
-      } catch (err) {
-        console.error("error during parse of osm search response lat/lon");
-      }
+  const handleSubmitLocationSearch = (query: string) => {
+    if (!!query && query.length > 0) {
+      setQueryLoading(true);
+      osmService
+        .search({ q: query })
+        .then((res) => {
+          if (!!res && res.length > 0 && !!res[0].lat && !!res[0].lon) {
+            if (res.length === 1) {
+              try {
+                setSelectedPos([
+                  parseFloat(res[0].lat),
+                  parseFloat(res[0].lon),
+                ]);
+                setSelectedPosName(res[0].display_name);
+              } catch (err) {
+                console.error(
+                  "error during parse of osm search response lat/lon",
+                );
+              }
+            } else {
+              router.push({
+                pathname: "/new-trip/search-location-response-selector",
+                params: {
+                  ...params,
+                  items: JSON.stringify(
+                    res.map((r) => ({
+                      lat: r.lat,
+                      lon: r.lon,
+                      displayName: r.display_name,
+                    })),
+                  ),
+                  selectedItemKey: "searchLocationResponse",
+                },
+              });
+            }
+          }
+        })
+        .finally(() => setQueryLoading(false));
     }
   };
 
@@ -129,6 +166,7 @@ export default function LocationSelectorPage() {
       if (!!defaultPos) {
         const parsedDefaultPos = JSON.parse(defaultPos) as GeoPointDto;
         setSelectedPos([parsedDefaultPos.lat, parsedDefaultPos.lon]);
+        setSelectedPosName(parsedDefaultPos.label);
       }
     } catch (err) {
       console.error(
@@ -136,6 +174,21 @@ export default function LocationSelectorPage() {
       );
     }
   }, [defaultPos]);
+
+  useEffect(() => {
+    console.log(params, callbackUrl, defaultPos, resetable, posValueKey);
+    if (!!searchLocationResponse) {
+      try {
+        const res = JSON.parse(searchLocationResponse);
+        setSelectedPos([parseFloat(res.lat), parseFloat(res.lon)]);
+        setSelectedPosName(res.displayName);
+      } catch (err) {
+        console.error(
+          "error during parse of osm search selected response lat/lon",
+        );
+      }
+    }
+  }, [searchLocationResponse]);
 
   return (
     <SafeAreaView edges={{ top: "off" }} style={{ flex: 1 }}>
@@ -166,16 +219,7 @@ export default function LocationSelectorPage() {
           onChangeText={setSelectedPosName}
           onSubmitEditing={(evt) => {
             const query = evt.nativeEvent.text.trim();
-            if (!!query && query.length > 0) {
-              setQueryLoading(true);
-              osmService
-                .search({ q: evt.nativeEvent.text })
-                .then((res) => {
-                  handleSearchResponse(res);
-                  // if (res?.display_name)  = res.display_name
-                })
-                .finally(() => setQueryLoading(false));
-            }
+            handleSubmitLocationSearch(query);
           }}
           editable={!queryLoading}
         ></TextInput>
@@ -209,7 +253,10 @@ export default function LocationSelectorPage() {
         }
         putMarkerOnPress
         putMarkerAtStartingCenter={!!selectedPos}
-        onPressPosition={setSelectedPos}
+        onPressPosition={(pos) => {
+          setSelectedPos(pos);
+          setSelectedPosName(undefined);
+        }}
       ></LeafletMap>
       {selectedPos &&
         (resetable && _actualSelectedPosIsParamPos() ? (

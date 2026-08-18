@@ -38,7 +38,10 @@ export default function RootLayout() {
                   onPress={() => {
                     router.push("/settings");
                   }}
-                  style={{ marginRight: 20 }}
+                  style={{
+                    paddingRight: 20,
+                    paddingVertical: 10,
+                  }}
                 >
                   <ExpoIcon name="menu-sharp" size={23}></ExpoIcon>
                 </Pressable>
@@ -54,6 +57,15 @@ export default function RootLayout() {
             options={{
               headerTitle: "Sélectionnez une position",
               headerShown: true,
+            }}
+          />
+          <Stack.Screen
+            name="new-trip/search-location-response-selector"
+            options={{
+              headerShown: false,
+              presentation: "transparentModal",
+              animation: "fade",
+              contentStyle: { backgroundColor: colors.transparent },
             }}
           />
           <Stack.Screen
